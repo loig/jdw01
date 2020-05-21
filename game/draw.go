@@ -18,12 +18,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 import (
-	"fmt"
 	"image"
-	"image/color"
 
 	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/ebitenutil"
 )
 
 var op *ebiten.DrawImageOptions
@@ -45,6 +42,13 @@ func (g *Game) Draw(screen *ebiten.Image) {
 				16+16*g.field[y][x].tileLookX, 16+16*g.field[y][x].tileLookY,
 			)
 			screen.DrawImage(tilesImage.SubImage(sub).(*ebiten.Image), op)
+			if g.field[y][x].hasDecoration {
+				sub = image.Rect(
+					16*g.field[y][x].decorationLookX, 16*g.field[y][x].decorationLookY,
+					16+16*g.field[y][x].decorationLookX, 16+16*g.field[y][x].decorationLookY,
+				)
+				screen.DrawImage(tilesImage.SubImage(sub).(*ebiten.Image), op)
+			}
 		}
 	}
 
@@ -100,9 +104,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	screen.DrawImage(pinkCharacterImage.SubImage(sub).(*ebiten.Image), op)
 
 	// DEBUG
-	ebitenutil.DrawLine(screen, float64(g.screenWidth)/2, 0, float64(g.screenWidth)/2, float64(g.screenHeight), color.White)
-	ebitenutil.DrawLine(screen, 0, float64(g.screenHeight)/2, float64(g.screenWidth), float64(g.screenHeight)/2, color.White)
-	s := fmt.Sprint("FPS: ", ebiten.CurrentFPS(), "\n", "TPS: ", ebiten.CurrentTPS())
-	ebitenutil.DebugPrint(screen, s)
-
+	/*
+		ebitenutil.DrawLine(screen, float64(g.screenWidth)/2, 0, float64(g.screenWidth)/2, float64(g.screenHeight), color.White)
+		ebitenutil.DrawLine(screen, 0, float64(g.screenHeight)/2, float64(g.screenWidth), float64(g.screenHeight)/2, color.White)
+		s := fmt.Sprint("FPS: ", ebiten.CurrentFPS(), "\n", "TPS: ", ebiten.CurrentTPS())
+		ebitenutil.DebugPrint(screen, s)
+	*/
 }

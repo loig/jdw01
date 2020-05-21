@@ -26,8 +26,10 @@ func (g *Game) initAnimation() {
 
 func (g *Game) updateAnimation() {
 	g.blueCharacter.updateCharacterAnimation()
-	g.whiteCharacter.updateCharacterAnimation()
 	g.pinkCharacter.updateCharacterAnimation()
+	if g.whiteCharacter.state != specialMove || g.state == whiteSpecialMove {
+		g.whiteCharacter.updateCharacterAnimation()
+	}
 }
 
 // blue character animation management

@@ -43,6 +43,7 @@ const (
 	blueSpecialMove
 	playingWhite
 	whiteSpecialMove
+	whiteSpecialMoveIdle
 	playingPink
 	pinkSpecialMoveDown
 	pinkSpecialMoveUp
@@ -62,15 +63,15 @@ func (g *Game) Init() (err error) {
 	}
 
 	// Set screen size
-	g.screenWidth = 600
-	g.screenHeight = 400
+	g.screenWidth = 500
+	g.screenHeight = 250
 
 	// Setup animations
 	g.initAnimation()
 
 	// Initial positions of characters
 	g.blueCharacter.x = 3
-	g.blueCharacter.y = 3
+	g.blueCharacter.y = 7
 	g.blueCharacter.state = idle
 	g.blueCharacter.speed = 0.1
 
