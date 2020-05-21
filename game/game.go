@@ -17,10 +17,28 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package game
 
+import (
+	"errors"
+)
+
 // Game implements ebiten.Game interface
 type Game struct {
+	state         gameState
+	gamepadID     int
 	blueCharacter character
 }
+
+// Current state of the game
+type gameState int
+
+const (
+	initGame gameState = iota
+	playing
+)
+
+// Errors for communications with main program
+var errEndGame = errors.New("End")
+var errNoGamePad = errors.New("GamePad")
 
 // Init initializes the Game structure
 func (g *Game) Init() (err error) {
@@ -38,6 +56,9 @@ func (g *Game) Init() (err error) {
 	g.blueCharacter.x = 160
 	g.blueCharacter.y = 120
 	g.blueCharacter.state = idle
+
+	// Set initial game state
+	g.state = initGame
 
 	return nil
 

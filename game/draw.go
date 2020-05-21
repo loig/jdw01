@@ -29,10 +29,17 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	// Draw the blue guy
 	op := &ebiten.DrawImageOptions{}
+	if g.blueCharacter.facing == left {
+		var mirorM ebiten.GeoM
+		mirorM.SetElement(0, 0, -1)
+		mirorM.SetElement(1, 1, 1)
+		op.GeoM.Concat(mirorM)
+		op.GeoM.Translate(32, 0)
+	}
 	op.GeoM.Translate(g.blueCharacter.x, g.blueCharacter.y)
 	sub := image.Rect(
-		0+32*g.blueCharacter.animationStep, 0,
-		32+32*g.blueCharacter.animationStep, 32,
+		0+32*g.blueCharacter.animationStep, 0+32*int(g.blueCharacter.state),
+		32+32*g.blueCharacter.animationStep, 32+32*int(g.blueCharacter.state),
 	)
 	screen.DrawImage(blueCharacterImage.SubImage(sub).(*ebiten.Image), op)
 

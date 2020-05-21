@@ -17,14 +17,44 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package game
 
-import "github.com/hajimehoshi/ebiten"
+import (
+	"github.com/hajimehoshi/ebiten"
+)
 
 // Update implements one of the required methods
 // for the ebiten.Game interface
 func (g *Game) Update(screen *ebiten.Image) error {
 
+	if g.state == initGame {
+		// Check for gamepad
+		gpIDs := ebiten.GamepadIDs()
+		if len(gpIDs) <= 0 {
+			return errNoGamePad
+		}
+
+		g.gamepadID = gpIDs[0]
+		g.state = playing
+		return nil
+	}
+
 	// update animations
 	g.updateAnimation()
+
+	if ebiten.IsGamepadButtonPressed(g.gamepadID, ebiten.GamepadButton(12)) {
+		// right
+		g.blueCharacter.facing = right
+		g.blueCharacter.state = move
+		return nil
+	}
+
+	if ebiten.IsGamepadButtonPressed(g.gamepadID, ebiten.GamepadButton(14)) {
+		// right
+		g.blueCharacter.facing = left
+		g.blueCharacter.state = move
+		return nil
+	}
+
+	g.blueCharacter.state = idle
 
 	return nil
 }
