@@ -33,6 +33,21 @@ var sub image.Rectangle
 // for the ebiten.Game interface
 func (g *Game) Draw(screen *ebiten.Image) {
 
+	// Draw the field
+	for y := 0; y < len(g.field); y++ {
+		for x := 0; x < len(g.field[y]); x++ {
+			op = &ebiten.DrawImageOptions{}
+			op.GeoM.Scale(2, 2)
+			op.GeoM.Translate(float64(x)*32, float64(y)*32)
+			g.applyCamera(op)
+			sub = image.Rect(
+				16*g.field[y][x].tileLookX, 16*g.field[y][x].tileLookY,
+				16+16*g.field[y][x].tileLookX, 16+16*g.field[y][x].tileLookY,
+			)
+			screen.DrawImage(tilesImage.SubImage(sub).(*ebiten.Image), op)
+		}
+	}
+
 	// Draw the blue guy
 	op = &ebiten.DrawImageOptions{}
 	if g.blueCharacter.facing == left {
@@ -83,21 +98,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		32+32*g.pinkCharacter.animationStep, 32+32*int(g.pinkCharacter.state),
 	)
 	screen.DrawImage(pinkCharacterImage.SubImage(sub).(*ebiten.Image), op)
-
-	// Draw the field
-	for y := 0; y < len(g.field); y++ {
-		for x := 0; x < len(g.field[y]); x++ {
-			op = &ebiten.DrawImageOptions{}
-			op.GeoM.Scale(2, 2)
-			op.GeoM.Translate(float64(x)*32, float64(y)*32)
-			g.applyCamera(op)
-			sub = image.Rect(
-				16*g.field[y][x].tileLookX, 16*g.field[y][x].tileLookY,
-				16+16*g.field[y][x].tileLookX, 16+16*g.field[y][x].tileLookY,
-			)
-			screen.DrawImage(tilesImage.SubImage(sub).(*ebiten.Image), op)
-		}
-	}
 
 	// DEBUG
 	ebitenutil.DrawLine(screen, float64(g.screenWidth)/2, 0, float64(g.screenWidth)/2, float64(g.screenHeight), color.White)

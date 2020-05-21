@@ -36,7 +36,7 @@ func (g *Game) blueCharacterInitAnimation() {
 	g.blueCharacter.animationStep = 0
 	g.blueCharacter.idleFrames = []int{12, 9, 9, 12}
 	g.blueCharacter.moveFrames = []int{5, 5, 5, 5, 5, 5}
-	g.blueCharacter.specialMoveFrames = []int{5, 5, 5, 5, 5, 5}
+	g.blueCharacter.specialMoveFrames = []int{7, 4, 4, 4, 4, 4, 1, 5, 5, 5, 5, 5, 5}
 	g.blueCharacter.previousState = idle
 }
 

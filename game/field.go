@@ -17,7 +17,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package game
 
-import "math"
+import (
+	"math"
+)
 
 type fieldTile struct {
 	kind      fieldKind
@@ -31,27 +33,28 @@ const (
 	floor fieldKind = iota
 	traversableWall
 	wall
+	backgroundWall
 	scale
 	nothing
 )
 
-func (g *Game) setInitialField() {
-	field := [][]fieldTile{
-		[]fieldTile{fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}},
-		[]fieldTile{fieldTile{nothing, 10, 1}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{nothing, 10, 1}},
-		[]fieldTile{fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}},
-		[]fieldTile{fieldTile{wall, 7, 3}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}},
-		[]fieldTile{fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}},
-		[]fieldTile{fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}},
-		[]fieldTile{fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}},
-		[]fieldTile{fieldTile{floor, 3, 0}, fieldTile{nothing, 10, 1}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}},
-	}
-	g.field = field
+func isBackgroundField(field fieldKind) bool {
+	return field == nothing || field == backgroundWall
 }
 
-func (g *Game) isValidField(xinit, yinit, xoffset float64) bool {
-	xreach := xinit + xoffset
-	if xoffset >= 0 {
+type fieldMove int
+
+const (
+	noFieldMove fieldMove = iota
+	normalFieldMove
+	blueFieldMove
+	pinkUpFieldMove
+	pinkDownFieldMove
+)
+
+func (g *Game) getFieldMove(xinit, yinit, offset float64) fieldMove {
+	xreach := xinit + offset
+	if offset >= 0 {
 		xreach += 0.25
 	} else {
 		xreach -= 0.25
@@ -59,13 +62,49 @@ func (g *Game) isValidField(xinit, yinit, xoffset float64) bool {
 	intx := int(math.Round(xreach))
 	inty := int(math.Round(yinit))
 	if len(g.field) < inty+2 || inty < -1 {
-		return false
+		return noFieldMove
 	}
-	if len(g.field[inty+1]) < intx+1 || intx < 0 {
-		return false
+	if (offset >= 0 && len(g.field[inty+1]) < intx+1) || (offset < 0 && intx < 0) {
+		return noFieldMove
 	}
 	if !(g.field[inty+1][intx].kind == floor) {
-		return false
+		if isBackgroundField(g.field[inty+1][intx].kind) &&
+			isBackgroundField(g.field[inty][intx].kind) &&
+			(len(g.field) >= inty+3) &&
+			g.field[inty+2][intx].kind == floor {
+			return pinkDownFieldMove
+		}
+		return noFieldMove
 	}
-	return g.field[inty][intx].kind == nothing
+	if !isBackgroundField(g.field[inty][intx].kind) {
+		if (offset >= 0 && len(g.field[inty+1]) < intx+2) || (offset < 0 && intx < 1) {
+			return noFieldMove
+		}
+		if (offset >= 0 && !(g.field[inty+1][intx+1].kind == floor)) ||
+			(offset < 0 && !(g.field[inty+1][intx-1].kind == floor)) {
+			return noFieldMove
+		}
+		if (offset >= 0 && isBackgroundField(g.field[inty][intx+1].kind)) ||
+			(offset < 0 && isBackgroundField(g.field[inty][intx-1].kind)) {
+			return blueFieldMove
+		}
+		return noFieldMove
+	}
+	return normalFieldMove
+}
+
+func (g *Game) setInitialField() {
+	field := [][]fieldTile{
+		[]fieldTile{fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}},
+		[]fieldTile{fieldTile{nothing, 10, 1}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{nothing, 10, 1}},
+		[]fieldTile{fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}},
+		[]fieldTile{fieldTile{nothing, 10, 1}, fieldTile{traversableWall, 7, 3}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{traversableWall, 7, 3}, fieldTile{wall, 4, 2}},
+		[]fieldTile{fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}},
+		[]fieldTile{fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}, fieldTile{nothing, 10, 1}},
+		[]fieldTile{fieldTile{backgroundWall, 4, 0}, fieldTile{backgroundWall, 4, 0}, fieldTile{backgroundWall, 4, 0}, fieldTile{backgroundWall, 4, 0}, fieldTile{backgroundWall, 4, 0}, fieldTile{backgroundWall, 4, 0}, fieldTile{backgroundWall, 4, 0}},
+		[]fieldTile{fieldTile{backgroundWall, 4, 0}, fieldTile{backgroundWall, 4, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{backgroundWall, 4, 0}, fieldTile{floor, 3, 0}},
+		[]fieldTile{fieldTile{backgroundWall, 4, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}},
+		[]fieldTile{fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}, fieldTile{floor, 3, 0}},
+	}
+	g.field = field
 }

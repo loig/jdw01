@@ -27,7 +27,7 @@ type cameraInfo struct {
 func (g *Game) setCameraPosition() {
 
 	switch g.state {
-	case playingBlue:
+	case playingBlue, blueSpecialMovePhase1, blueSpecialMovePhase2:
 		g.camera.x = g.blueCharacter.x * 32
 		g.camera.y = g.blueCharacter.y * 32
 	case playingPink:

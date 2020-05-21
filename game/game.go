@@ -40,8 +40,12 @@ type gameState int
 const (
 	initGame gameState = iota
 	playingBlue
+	blueSpecialMovePhase1
+	blueSpecialMovePhase2
 	playingWhite
+	whiteSpecialMove
 	playingPink
+	pinkSpecialMove
 )
 
 // Errors for communications with main program
