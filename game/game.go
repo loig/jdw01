@@ -23,9 +23,11 @@ import (
 
 // Game implements ebiten.Game interface
 type Game struct {
-	state         gameState
-	gamepadID     int
-	blueCharacter character
+	state          gameState
+	gamepadID      int
+	blueCharacter  character
+	whiteCharacter character
+	pinkCharacter  character
 }
 
 // Current state of the game
@@ -33,7 +35,9 @@ type gameState int
 
 const (
 	initGame gameState = iota
-	playing
+	playingBlue
+	playingWhite
+	playingPink
 )
 
 // Errors for communications with main program
@@ -56,6 +60,14 @@ func (g *Game) Init() (err error) {
 	g.blueCharacter.x = 160
 	g.blueCharacter.y = 120
 	g.blueCharacter.state = idle
+
+	g.whiteCharacter.x = 160
+	g.whiteCharacter.y = 60
+	g.whiteCharacter.state = idle
+
+	g.pinkCharacter.x = 160
+	g.pinkCharacter.y = 180
+	g.pinkCharacter.state = idle
 
 	// Set initial game state
 	g.state = initGame

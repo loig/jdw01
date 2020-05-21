@@ -25,10 +25,22 @@ import (
 )
 
 var blueCharacterImage *ebiten.Image
+var whiteCharacterImage *ebiten.Image
+var pinkCharacterImage *ebiten.Image
 
 func loadAssets() (err error) {
 
 	blueCharacterImage, _, err = ebitenutil.NewImageFromFile("assets/dude.png", ebiten.FilterDefault)
+	if err != nil {
+		return err
+	}
+
+	whiteCharacterImage, _, err = ebitenutil.NewImageFromFile("assets/owlet.png", ebiten.FilterDefault)
+	if err != nil {
+		return err
+	}
+
+	pinkCharacterImage, _, err = ebitenutil.NewImageFromFile("assets/pink.png", ebiten.FilterDefault)
 	if err != nil {
 		return err
 	}

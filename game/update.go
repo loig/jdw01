@@ -19,6 +19,7 @@ package game
 
 import (
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/inpututil"
 )
 
 // Update implements one of the required methods
@@ -33,28 +34,67 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		}
 
 		g.gamepadID = gpIDs[0]
-		g.state = playing
+		g.state = playingBlue
 		return nil
 	}
 
 	// update animations
 	g.updateAnimation()
 
+	// current player
+	var currentCharacter *character
+	switch g.state {
+	case playingBlue:
+		currentCharacter = &g.blueCharacter
+	case playingWhite:
+		currentCharacter = &g.whiteCharacter
+	case playingPink:
+		currentCharacter = &g.pinkCharacter
+	}
+
 	if ebiten.IsGamepadButtonPressed(g.gamepadID, ebiten.GamepadButton(12)) {
 		// right
-		g.blueCharacter.facing = right
-		g.blueCharacter.state = move
+		currentCharacter.facing = right
+		currentCharacter.state = move
 		return nil
 	}
 
 	if ebiten.IsGamepadButtonPressed(g.gamepadID, ebiten.GamepadButton(14)) {
-		// right
-		g.blueCharacter.facing = left
-		g.blueCharacter.state = move
+		// left
+		currentCharacter.facing = left
+		currentCharacter.state = move
 		return nil
 	}
 
-	g.blueCharacter.state = idle
+	if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(5)) {
+		// switch right
+		if currentCharacter.state == idle {
+			switch g.state {
+			case playingBlue:
+				g.state = playingPink
+			case playingPink:
+				g.state = playingWhite
+			case playingWhite:
+				g.state = playingBlue
+			}
+		}
+	}
+
+	if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(4)) {
+		// switch left
+		if currentCharacter.state == idle {
+			switch g.state {
+			case playingBlue:
+				g.state = playingWhite
+			case playingPink:
+				g.state = playingBlue
+			case playingWhite:
+				g.state = playingPink
+			}
+		}
+	}
+
+	currentCharacter.state = idle
 
 	return nil
 }

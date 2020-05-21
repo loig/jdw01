@@ -20,10 +20,14 @@ package game
 // general animation management
 func (g *Game) initAnimation() {
 	g.blueCharacterInitAnimation()
+	g.whiteCharacterInitAnimation()
+	g.pinkCharacterInitAnimation()
 }
 
 func (g *Game) updateAnimation() {
 	g.blueCharacter.updateCharacterAnimation()
+	g.whiteCharacter.updateCharacterAnimation()
+	g.pinkCharacter.updateCharacterAnimation()
 }
 
 // blue character animation management
@@ -34,6 +38,26 @@ func (g *Game) blueCharacterInitAnimation() {
 	g.blueCharacter.moveFrames = []int{5, 5, 5, 5, 5, 5}
 	g.blueCharacter.specialMoveFrames = []int{5, 5, 5, 5, 5, 5}
 	g.blueCharacter.previousState = idle
+}
+
+// white character animation management
+func (g *Game) whiteCharacterInitAnimation() {
+	g.whiteCharacter.animationFrame = 0
+	g.whiteCharacter.animationStep = 0
+	g.whiteCharacter.idleFrames = []int{13, 15, 15, 13}
+	g.whiteCharacter.moveFrames = []int{7, 7, 7, 7, 7, 7}
+	g.whiteCharacter.specialMoveFrames = []int{5, 5, 5, 5}
+	g.whiteCharacter.previousState = idle
+}
+
+// pink character animation management
+func (g *Game) pinkCharacterInitAnimation() {
+	g.pinkCharacter.animationFrame = 0
+	g.pinkCharacter.animationStep = 0
+	g.pinkCharacter.idleFrames = []int{9, 9, 9, 9}
+	g.pinkCharacter.moveFrames = []int{4, 4, 4, 4, 4, 4}
+	g.pinkCharacter.specialMoveFrames = []int{5, 5, 5, 5, 5, 5, 5, 5}
+	g.pinkCharacter.previousState = idle
 }
 
 // general character animation management
