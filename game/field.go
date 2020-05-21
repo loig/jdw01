@@ -77,16 +77,21 @@ func (g *Game) getFieldMove(xinit, yinit, offset float64) fieldMove {
 		return noFieldMove
 	}
 	if !isBackgroundField(g.field[inty][intx].kind) {
-		if (offset >= 0 && len(g.field[inty+1]) < intx+2) || (offset < 0 && intx < 1) {
-			return noFieldMove
-		}
-		if (offset >= 0 && !(g.field[inty+1][intx+1].kind == floor)) ||
-			(offset < 0 && !(g.field[inty+1][intx-1].kind == floor)) {
-			return noFieldMove
-		}
-		if (offset >= 0 && isBackgroundField(g.field[inty][intx+1].kind)) ||
-			(offset < 0 && isBackgroundField(g.field[inty][intx-1].kind)) {
+		if (offset >= 0 &&
+			len(g.field[inty+1]) >= intx+2 &&
+			g.field[inty+1][intx+1].kind == floor &&
+			isBackgroundField(g.field[inty][intx+1].kind)) ||
+			(offset < 0 &&
+				intx >= 1 &&
+				g.field[inty+1][intx-1].kind == floor &&
+				isBackgroundField(g.field[inty][intx-1].kind)) {
 			return blueFieldMove
+		}
+		if inty >= 1 && intx >= 1 &&
+			isBackgroundField(g.field[inty-1][intx-1].kind) &&
+			isBackgroundField(g.field[inty-1][intx].kind) &&
+			g.field[inty][intx].kind == floor {
+			return pinkUpFieldMove
 		}
 		return noFieldMove
 	}

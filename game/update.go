@@ -18,8 +18,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 import (
+	"math"
+
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/inpututil"
+	"github.com/loig/jdw01/util"
 )
 
 // Update implements one of the required methods
@@ -60,10 +63,23 @@ func (g *Game) Update(screen *ebiten.Image) error {
 				currentCharacter.state = move
 			case blueFieldMove:
 				if g.state == playingBlue {
-					g.state = blueSpecialMovePhase1
+					g.state = blueSpecialMove
 					currentCharacter.state = specialMove
+					currentCharacter.specialMoveCurrentFrame = 0
 				} else {
 					currentCharacter.state = idle
+				}
+			case pinkDownFieldMove:
+				if g.state == playingPink {
+					g.state = pinkSpecialMoveDown
+					currentCharacter.state = specialMove
+					currentCharacter.specialMoveCurrentFrame = 0
+				}
+			case pinkUpFieldMove:
+				if g.state == playingPink {
+					g.state = pinkSpecialMoveUp
+					currentCharacter.state = specialMove
+					currentCharacter.specialMoveCurrentFrame = 0
 				}
 			case noFieldMove:
 				currentCharacter.state = idle
@@ -77,10 +93,23 @@ func (g *Game) Update(screen *ebiten.Image) error {
 				currentCharacter.state = move
 			case blueFieldMove:
 				if g.state == playingBlue {
-					g.state = blueSpecialMovePhase1
+					g.state = blueSpecialMove
 					currentCharacter.state = specialMove
+					currentCharacter.specialMoveCurrentFrame = 0
 				} else {
 					currentCharacter.state = idle
+				}
+			case pinkDownFieldMove:
+				if g.state == playingPink {
+					g.state = pinkSpecialMoveDown
+					currentCharacter.state = specialMove
+					currentCharacter.specialMoveCurrentFrame = 0
+				}
+			case pinkUpFieldMove:
+				if g.state == playingPink {
+					g.state = pinkSpecialMoveUp
+					currentCharacter.state = specialMove
+					currentCharacter.specialMoveCurrentFrame = 0
 				}
 			case noFieldMove:
 				currentCharacter.state = idle
@@ -115,20 +144,81 @@ func (g *Game) Update(screen *ebiten.Image) error {
 
 	}
 
-	if g.state == blueSpecialMovePhase1 {
-		if g.blueCharacter.animationStep >= 6 {
+	if g.state == blueSpecialMove {
+		g.blueCharacter.specialMoveCurrentFrame++
+		if g.blueCharacter.specialMoveCurrentFrame == g.blueCharacter.specialMoveNumFrames {
 			if g.blueCharacter.facing == right {
 				g.blueCharacter.x += 1.75
 			} else {
 				g.blueCharacter.x -= 1.75
 			}
-			g.state = blueSpecialMovePhase2
+		}
+		if g.blueCharacter.specialMoveCurrentFrame > g.blueCharacter.specialMoveNumFrames {
+			if g.blueCharacter.animationStep == 0 {
+				g.state = playingBlue
+				g.blueCharacter.state = idle
+			}
 		}
 	}
 
-	if g.state == blueSpecialMovePhase2 {
-		if g.blueCharacter.animationStep < 6 {
-			g.state = playingBlue
+	if g.state == pinkSpecialMoveDown {
+		g.pinkCharacter.specialMoveCurrentFrame++
+		// horizontal move
+		t := float64(g.pinkCharacter.specialMoveCurrentFrame) / float64(g.pinkCharacter.specialMoveNumFrames)
+		tprev := float64(g.pinkCharacter.specialMoveCurrentFrame-1) / float64(g.pinkCharacter.specialMoveNumFrames)
+		frameHorizontalMove := util.SmoothStop6(t) - util.SmoothStop6(tprev)
+		if g.pinkCharacter.facing == right {
+			g.pinkCharacter.x += 0.75 * frameHorizontalMove
+		} else {
+			g.pinkCharacter.x -= 0.75 * frameHorizontalMove
+		}
+		// vertical move
+		firstSplit := g.pinkCharacter.specialMoveNumFrames / 3
+		secondSplit := g.pinkCharacter.specialMoveNumFrames - firstSplit
+		if g.pinkCharacter.specialMoveCurrentFrame <= firstSplit {
+			t := float64(g.pinkCharacter.specialMoveCurrentFrame) / float64(firstSplit)
+			tprev := float64(g.pinkCharacter.specialMoveCurrentFrame-1) / float64(firstSplit)
+			frameVerticalMove := util.SmoothStop6(t) - util.SmoothStop6(tprev)
+			g.pinkCharacter.y -= 0.25 * frameVerticalMove
+		} else {
+			t := float64(g.pinkCharacter.specialMoveCurrentFrame-firstSplit) / float64(secondSplit)
+			tprev := float64(g.pinkCharacter.specialMoveCurrentFrame-1-firstSplit) / float64(secondSplit)
+			frameVerticalMove := util.SmoothStart3(t) - util.SmoothStart3(tprev)
+			g.pinkCharacter.y += 1.25 * frameVerticalMove
+		}
+		// end of move
+		if g.pinkCharacter.specialMoveCurrentFrame >= g.pinkCharacter.specialMoveNumFrames {
+			g.state = playingPink
+			g.pinkCharacter.state = idle
+			g.pinkCharacter.y = math.Round(g.pinkCharacter.y)
+		}
+	}
+
+	if g.state == pinkSpecialMoveUp {
+		g.pinkCharacter.specialMoveCurrentFrame++
+		if g.pinkCharacter.facing == right {
+			g.pinkCharacter.x += 0.75 / float64(g.pinkCharacter.specialMoveNumFrames)
+		} else {
+			g.pinkCharacter.x -= 0.75 / float64(g.pinkCharacter.specialMoveNumFrames)
+		}
+		// vertical move
+		firstSplit := g.pinkCharacter.specialMoveNumFrames / 3
+		secondSplit := g.pinkCharacter.specialMoveNumFrames - firstSplit
+		if g.pinkCharacter.specialMoveCurrentFrame <= firstSplit {
+			t := float64(g.pinkCharacter.specialMoveCurrentFrame) / float64(firstSplit)
+			tprev := float64(g.pinkCharacter.specialMoveCurrentFrame-1) / float64(firstSplit)
+			frameVerticalMove := util.SmoothStop3(t) - util.SmoothStop3(tprev)
+			g.pinkCharacter.y -= 1.25 * frameVerticalMove
+		} else {
+			t := float64(g.pinkCharacter.specialMoveCurrentFrame-firstSplit) / float64(secondSplit)
+			tprev := float64(g.pinkCharacter.specialMoveCurrentFrame-1-firstSplit) / float64(secondSplit)
+			frameVerticalMove := util.SmoothStart3(t) - util.SmoothStart3(tprev)
+			g.pinkCharacter.y += 0.25 * frameVerticalMove
+		}
+		if g.pinkCharacter.specialMoveCurrentFrame >= g.pinkCharacter.specialMoveNumFrames {
+			g.state = playingPink
+			g.pinkCharacter.state = idle
+			g.pinkCharacter.y = math.Round(g.pinkCharacter.y)
 		}
 	}
 

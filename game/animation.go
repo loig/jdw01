@@ -37,6 +37,9 @@ func (g *Game) blueCharacterInitAnimation() {
 	g.blueCharacter.idleFrames = []int{12, 9, 9, 12}
 	g.blueCharacter.moveFrames = []int{5, 5, 5, 5, 5, 5}
 	g.blueCharacter.specialMoveFrames = []int{7, 4, 4, 4, 4, 4, 1, 5, 5, 5, 5, 5, 5}
+	for i := 0; i < 7; i++ {
+		g.blueCharacter.specialMoveNumFrames += g.blueCharacter.specialMoveFrames[i]
+	}
 	g.blueCharacter.previousState = idle
 }
 
@@ -56,7 +59,10 @@ func (g *Game) pinkCharacterInitAnimation() {
 	g.pinkCharacter.animationStep = 0
 	g.pinkCharacter.idleFrames = []int{9, 9, 9, 9}
 	g.pinkCharacter.moveFrames = []int{4, 4, 4, 4, 4, 4}
-	g.pinkCharacter.specialMoveFrames = []int{5, 5, 5, 5, 5, 5, 5, 5}
+	g.pinkCharacter.specialMoveFrames = []int{3, 3, 3, 3, 3, 3, 3, 3}
+	for _, numFrames := range g.pinkCharacter.specialMoveFrames {
+		g.pinkCharacter.specialMoveNumFrames += numFrames
+	}
 	g.pinkCharacter.previousState = idle
 }
 

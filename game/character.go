@@ -18,17 +18,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 type character struct {
-	x                 float64
-	y                 float64
-	speed             float64
-	state             characterState
-	previousState     characterState
-	facing            side
-	animationFrame    int
-	animationStep     int
-	idleFrames        []int
-	moveFrames        []int
-	specialMoveFrames []int
+	x                       float64
+	y                       float64
+	speed                   float64
+	state                   characterState
+	previousState           characterState
+	facing                  side
+	animationFrame          int
+	animationStep           int
+	idleFrames              []int
+	moveFrames              []int
+	specialMoveFrames       []int
+	specialMoveNumFrames    int
+	specialMoveCurrentFrame int
 }
 
 type characterState int
