@@ -49,17 +49,23 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		currentCharacter = &g.pinkCharacter
 	}
 
+	currentCharacter.state = idle
+
 	switch {
 	case ebiten.IsGamepadButtonPressed(g.gamepadID, ebiten.GamepadButton(12)):
 		// right
 		currentCharacter.facing = right
-		currentCharacter.state = move
-		currentCharacter.x += currentCharacter.speed
+		if g.isValidField(currentCharacter.x, currentCharacter.y, currentCharacter.speed) {
+			currentCharacter.x += currentCharacter.speed
+			currentCharacter.state = move
+		}
 	case ebiten.IsGamepadButtonPressed(g.gamepadID, ebiten.GamepadButton(14)):
 		// left
 		currentCharacter.facing = left
-		currentCharacter.state = move
-		currentCharacter.x -= currentCharacter.speed
+		if g.isValidField(currentCharacter.x, currentCharacter.y, -currentCharacter.speed) {
+			currentCharacter.x -= currentCharacter.speed
+			currentCharacter.state = move
+		}
 	case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(5)):
 		// switch right
 		if currentCharacter.state == idle {
@@ -84,8 +90,6 @@ func (g *Game) Update(screen *ebiten.Image) error {
 				g.state = playingPink
 			}
 		}
-	default:
-		currentCharacter.state = idle
 	}
 
 	// update animations

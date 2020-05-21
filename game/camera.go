@@ -17,6 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package game
 
+import "github.com/hajimehoshi/ebiten"
+
 type cameraInfo struct {
 	x float64
 	y float64
@@ -26,14 +28,21 @@ func (g *Game) setCameraPosition() {
 
 	switch g.state {
 	case playingBlue:
-		g.camera.x = g.blueCharacter.x
-		g.camera.y = g.blueCharacter.y
+		g.camera.x = g.blueCharacter.x * 32
+		g.camera.y = g.blueCharacter.y * 32
 	case playingPink:
-		g.camera.x = g.pinkCharacter.x
-		g.camera.y = g.pinkCharacter.y
+		g.camera.x = g.pinkCharacter.x * 32
+		g.camera.y = g.pinkCharacter.y * 32
 	case playingWhite:
-		g.camera.x = g.whiteCharacter.x
-		g.camera.y = g.whiteCharacter.y
+		g.camera.x = g.whiteCharacter.x * 32
+		g.camera.y = g.whiteCharacter.y * 32
 	}
 
+}
+
+func (g *Game) applyCamera(op *ebiten.DrawImageOptions) {
+	op.GeoM.Translate(
+		-g.camera.x+float64(g.screenWidth)/2-16,
+		-g.camera.y+float64(g.screenHeight)/2-16,
+	)
 }

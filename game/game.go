@@ -31,6 +31,7 @@ type Game struct {
 	blueCharacter  character
 	whiteCharacter character
 	pinkCharacter  character
+	field          [][]fieldTile
 }
 
 // Current state of the game
@@ -64,20 +65,23 @@ func (g *Game) Init() (err error) {
 	g.initAnimation()
 
 	// Initial positions of characters
-	g.blueCharacter.x = float64(g.screenWidth) / 2
-	g.blueCharacter.y = float64(g.screenHeight) / 2
+	g.blueCharacter.x = 3
+	g.blueCharacter.y = 3
 	g.blueCharacter.state = idle
-	g.blueCharacter.speed = 0.2
+	g.blueCharacter.speed = 0.1
 
 	g.whiteCharacter.x = g.blueCharacter.x
-	g.whiteCharacter.y = g.blueCharacter.y - 60
+	g.whiteCharacter.y = g.blueCharacter.y - 3
 	g.whiteCharacter.state = idle
-	g.whiteCharacter.speed = 0.1
+	g.whiteCharacter.speed = 0.08
 
 	g.pinkCharacter.x = g.blueCharacter.x
-	g.pinkCharacter.y = g.blueCharacter.y + 60
+	g.pinkCharacter.y = g.blueCharacter.y + 3
 	g.pinkCharacter.state = idle
-	g.pinkCharacter.speed = 0.3
+	g.pinkCharacter.speed = 0.12
+
+	// Set field
+	g.setInitialField()
 
 	// Set camera
 	g.setCameraPosition()

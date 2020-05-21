@@ -42,8 +42,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		op.GeoM.Concat(mirorM)
 		op.GeoM.Translate(32, 0)
 	}
-	op.GeoM.Translate(g.blueCharacter.x-16, g.blueCharacter.y-32)
-	op.GeoM.Translate(-g.camera.x+float64(g.screenWidth)/2, -g.camera.y+float64(g.screenHeight)/2)
+	op.GeoM.Translate((g.blueCharacter.x)*32, (g.blueCharacter.y)*32)
+	g.applyCamera(op)
 	sub = image.Rect(
 		0+32*g.blueCharacter.animationStep, 0+32*int(g.blueCharacter.state),
 		32+32*g.blueCharacter.animationStep, 32+32*int(g.blueCharacter.state),
@@ -59,8 +59,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		op.GeoM.Concat(mirorM)
 		op.GeoM.Translate(32, 0)
 	}
-	op.GeoM.Translate(g.whiteCharacter.x-16, g.whiteCharacter.y-32)
-	op.GeoM.Translate(-g.camera.x+float64(g.screenWidth)/2, -g.camera.y+float64(g.screenHeight)/2)
+	op.GeoM.Translate((g.whiteCharacter.x)*32, (g.whiteCharacter.y)*32)
+	g.applyCamera(op)
 	sub = image.Rect(
 		0+32*g.whiteCharacter.animationStep, 0+32*int(g.whiteCharacter.state),
 		32+32*g.whiteCharacter.animationStep, 32+32*int(g.whiteCharacter.state),
@@ -76,13 +76,28 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		op.GeoM.Concat(mirorM)
 		op.GeoM.Translate(32, 0)
 	}
-	op.GeoM.Translate(g.pinkCharacter.x-16, g.pinkCharacter.y-32)
-	op.GeoM.Translate(-g.camera.x+float64(g.screenWidth)/2, -g.camera.y+float64(g.screenHeight)/2)
+	op.GeoM.Translate((g.pinkCharacter.x)*32, (g.pinkCharacter.y)*32)
+	g.applyCamera(op)
 	sub = image.Rect(
 		0+32*g.pinkCharacter.animationStep, 0+32*int(g.pinkCharacter.state),
 		32+32*g.pinkCharacter.animationStep, 32+32*int(g.pinkCharacter.state),
 	)
 	screen.DrawImage(pinkCharacterImage.SubImage(sub).(*ebiten.Image), op)
+
+	// Draw the field
+	for y := 0; y < len(g.field); y++ {
+		for x := 0; x < len(g.field[y]); x++ {
+			op = &ebiten.DrawImageOptions{}
+			op.GeoM.Scale(2, 2)
+			op.GeoM.Translate(float64(x)*32, float64(y)*32)
+			g.applyCamera(op)
+			sub = image.Rect(
+				16*g.field[y][x].tileLookX, 16*g.field[y][x].tileLookY,
+				16+16*g.field[y][x].tileLookX, 16+16*g.field[y][x].tileLookY,
+			)
+			screen.DrawImage(tilesImage.SubImage(sub).(*ebiten.Image), op)
+		}
+	}
 
 	// DEBUG
 	ebitenutil.DrawLine(screen, float64(g.screenWidth)/2, 0, float64(g.screenWidth)/2, float64(g.screenHeight), color.White)
