@@ -17,14 +17,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package game
 
-import "github.com/hajimehoshi/ebiten"
+import (
+	_ "image/png" //for ebitenutil.NewImageFromFile
 
-// Update implements one of the required methods
-// for the ebiten.Game interface
-func (g *Game) Update(screen *ebiten.Image) error {
+	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/ebitenutil"
+)
 
-	// update animations
-	g.updateAnimation()
+var blueCharacterImage *ebiten.Image
+
+func loadAssets() (err error) {
+
+	blueCharacterImage, _, err = ebitenutil.NewImageFromFile("assets/dude.png", ebiten.FilterDefault)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

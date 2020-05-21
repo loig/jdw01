@@ -17,14 +17,30 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package game
 
-import "github.com/hajimehoshi/ebiten"
-
-// Update implements one of the required methods
-// for the ebiten.Game interface
-func (g *Game) Update(screen *ebiten.Image) error {
-
-	// update animations
-	g.updateAnimation()
-
-	return nil
+type character struct {
+	x                 float64
+	y                 float64
+	state             characterState
+	previousState     characterState
+	facing            side
+	animationFrame    int
+	animationStep     int
+	idleFrames        []int
+	moveFrames        []int
+	specialMoveFrames []int
 }
+
+type characterState int
+
+const (
+	idle characterState = iota
+	move
+	specialMove
+)
+
+type side int
+
+const (
+	right side = iota
+	left
+)
