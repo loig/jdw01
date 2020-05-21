@@ -25,6 +25,9 @@ import (
 type Game struct {
 	state          gameState
 	gamepadID      int
+	camera         cameraInfo
+	screenWidth    int
+	screenHeight   int
 	blueCharacter  character
 	whiteCharacter character
 	pinkCharacter  character
@@ -53,21 +56,31 @@ func (g *Game) Init() (err error) {
 		return err
 	}
 
+	// Set screen size
+	g.screenWidth = 600
+	g.screenHeight = 400
+
 	// Setup animations
 	g.initAnimation()
 
 	// Initial positions of characters
-	g.blueCharacter.x = 160
-	g.blueCharacter.y = 120
+	g.blueCharacter.x = float64(g.screenWidth) / 2
+	g.blueCharacter.y = float64(g.screenHeight) / 2
 	g.blueCharacter.state = idle
+	g.blueCharacter.speed = 0.2
 
-	g.whiteCharacter.x = 160
-	g.whiteCharacter.y = 60
+	g.whiteCharacter.x = g.blueCharacter.x
+	g.whiteCharacter.y = g.blueCharacter.y - 60
 	g.whiteCharacter.state = idle
+	g.whiteCharacter.speed = 0.1
 
-	g.pinkCharacter.x = 160
-	g.pinkCharacter.y = 180
+	g.pinkCharacter.x = g.blueCharacter.x
+	g.pinkCharacter.y = g.blueCharacter.y + 60
 	g.pinkCharacter.state = idle
+	g.pinkCharacter.speed = 0.3
+
+	// Set camera
+	g.setCameraPosition()
 
 	// Set initial game state
 	g.state = initGame

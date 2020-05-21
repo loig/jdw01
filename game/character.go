@@ -20,6 +20,7 @@ package game
 type character struct {
 	x                 float64
 	y                 float64
+	speed             float64
 	state             characterState
 	previousState     characterState
 	facing            side

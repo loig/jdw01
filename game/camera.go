@@ -17,8 +17,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package game
 
-// Layout implements one of the required methods
-// for the ebiten.Game interface
-func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return g.screenWidth, g.screenHeight
+type cameraInfo struct {
+	x float64
+	y float64
+}
+
+func (g *Game) setCameraPosition() {
+
+	switch g.state {
+	case playingBlue:
+		g.camera.x = g.blueCharacter.x
+		g.camera.y = g.blueCharacter.y
+	case playingPink:
+		g.camera.x = g.pinkCharacter.x
+		g.camera.y = g.pinkCharacter.y
+	case playingWhite:
+		g.camera.x = g.whiteCharacter.x
+		g.camera.y = g.whiteCharacter.y
+	}
+
 }

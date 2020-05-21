@@ -32,6 +32,10 @@ func main() {
 		panic(loadError)
 	}
 
+	// initialize window
+	ebiten.SetWindowSize(600, 400)
+	ebiten.SetWindowTitle("BWP")
+
 	// run the game
 	if err := ebiten.RunGame(g); err != nil {
 		panic(err)

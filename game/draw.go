@@ -18,9 +18,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 import (
+	"fmt"
 	"image"
+	"image/color"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/ebitenutil"
 )
 
 var op *ebiten.DrawImageOptions
@@ -39,7 +42,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		op.GeoM.Concat(mirorM)
 		op.GeoM.Translate(32, 0)
 	}
-	op.GeoM.Translate(g.blueCharacter.x, g.blueCharacter.y)
+	op.GeoM.Translate(g.blueCharacter.x-16, g.blueCharacter.y-32)
+	op.GeoM.Translate(-g.camera.x+float64(g.screenWidth)/2, -g.camera.y+float64(g.screenHeight)/2)
 	sub = image.Rect(
 		0+32*g.blueCharacter.animationStep, 0+32*int(g.blueCharacter.state),
 		32+32*g.blueCharacter.animationStep, 32+32*int(g.blueCharacter.state),
@@ -55,7 +59,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		op.GeoM.Concat(mirorM)
 		op.GeoM.Translate(32, 0)
 	}
-	op.GeoM.Translate(g.whiteCharacter.x, g.whiteCharacter.y)
+	op.GeoM.Translate(g.whiteCharacter.x-16, g.whiteCharacter.y-32)
+	op.GeoM.Translate(-g.camera.x+float64(g.screenWidth)/2, -g.camera.y+float64(g.screenHeight)/2)
 	sub = image.Rect(
 		0+32*g.whiteCharacter.animationStep, 0+32*int(g.whiteCharacter.state),
 		32+32*g.whiteCharacter.animationStep, 32+32*int(g.whiteCharacter.state),
@@ -71,11 +76,18 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		op.GeoM.Concat(mirorM)
 		op.GeoM.Translate(32, 0)
 	}
-	op.GeoM.Translate(g.pinkCharacter.x, g.pinkCharacter.y)
+	op.GeoM.Translate(g.pinkCharacter.x-16, g.pinkCharacter.y-32)
+	op.GeoM.Translate(-g.camera.x+float64(g.screenWidth)/2, -g.camera.y+float64(g.screenHeight)/2)
 	sub = image.Rect(
 		0+32*g.pinkCharacter.animationStep, 0+32*int(g.pinkCharacter.state),
 		32+32*g.pinkCharacter.animationStep, 32+32*int(g.pinkCharacter.state),
 	)
 	screen.DrawImage(pinkCharacterImage.SubImage(sub).(*ebiten.Image), op)
+
+	// DEBUG
+	ebitenutil.DrawLine(screen, float64(g.screenWidth)/2, 0, float64(g.screenWidth)/2, float64(g.screenHeight), color.White)
+	ebitenutil.DrawLine(screen, 0, float64(g.screenHeight)/2, float64(g.screenWidth), float64(g.screenHeight)/2, color.White)
+	s := fmt.Sprint("FPS: ", ebiten.CurrentFPS(), "\n", "TPS: ", ebiten.CurrentTPS())
+	ebitenutil.DebugPrint(screen, s)
 
 }
