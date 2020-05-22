@@ -42,6 +42,10 @@ func (g *Game) blueCharacterInitAnimation() {
 	for i := 0; i < 7; i++ {
 		g.blueCharacter.specialMoveNumFrames += g.blueCharacter.specialMoveFrames[i]
 	}
+	g.blueCharacter.strikeFrames = []int{2, 2, 6, 4, 10, 2}
+	for _, numFrames := range g.blueCharacter.strikeFrames {
+		g.blueCharacter.strikeNumFrames += numFrames
+	}
 	g.blueCharacter.previousState = idle
 }
 
@@ -52,6 +56,10 @@ func (g *Game) whiteCharacterInitAnimation() {
 	g.whiteCharacter.idleFrames = []int{13, 15, 15, 13}
 	g.whiteCharacter.moveFrames = []int{7, 7, 7, 7, 7, 7}
 	g.whiteCharacter.specialMoveFrames = []int{5, 5, 5, 5}
+	g.whiteCharacter.strikeFrames = []int{2, 5, 7, 12, 2}
+	for _, numFrames := range g.whiteCharacter.strikeFrames {
+		g.whiteCharacter.strikeNumFrames += numFrames
+	}
 	g.whiteCharacter.previousState = idle
 }
 
@@ -64,6 +72,10 @@ func (g *Game) pinkCharacterInitAnimation() {
 	g.pinkCharacter.specialMoveFrames = []int{3, 3, 3, 3, 3, 3, 3, 3}
 	for _, numFrames := range g.pinkCharacter.specialMoveFrames {
 		g.pinkCharacter.specialMoveNumFrames += numFrames
+	}
+	g.pinkCharacter.strikeFrames = []int{2, 2, 5, 3, 5, 3, 5, 2}
+	for _, numFrames := range g.pinkCharacter.strikeFrames {
+		g.pinkCharacter.strikeNumFrames += numFrames
 	}
 	g.pinkCharacter.previousState = idle
 }
@@ -88,6 +100,8 @@ func (c *character) updateCharacterAnimation() {
 		frames = c.moveFrames
 	case specialMove:
 		frames = c.specialMoveFrames
+	case strike:
+		frames = c.strikeFrames
 	}
 
 	if c.animationFrame >= frames[c.animationStep] {

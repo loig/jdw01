@@ -31,6 +31,9 @@ type character struct {
 	specialMoveFrames       []int
 	specialMoveNumFrames    int
 	specialMoveCurrentFrame int
+	strikeFrames            []int
+	strikeNumFrames         int
+	strikeCurrentFrame      int
 }
 
 type characterState int
@@ -39,6 +42,7 @@ const (
 	idle characterState = iota
 	move
 	specialMove
+	strike
 )
 
 type side int

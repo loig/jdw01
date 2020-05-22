@@ -63,6 +63,17 @@ func (g *Game) Update(screen *ebiten.Image) error {
 			g.tryRightSwitch(currentCharacter)
 		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(4)):
 			g.tryLeftSwitch(currentCharacter)
+		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(2)):
+			currentCharacter.state = strike
+			currentCharacter.strikeCurrentFrame = 0
+			switch g.state {
+			case playingBlue:
+				g.state = blueStrike
+			case playingPink:
+				g.state = pinkStrike
+			case playingWhite:
+				g.state = whiteStrike
+			}
 		default:
 			currentCharacter.state = idle
 		}
@@ -88,6 +99,26 @@ func (g *Game) Update(screen *ebiten.Image) error {
 			g.tryWhiteSpecialSwitchLeft()
 		default:
 			g.state = whiteSpecialMoveIdle
+		}
+
+	case blueStrike, pinkStrike, whiteStrike:
+		var currentCharacter *character
+		var nextState gameState
+		switch g.state {
+		case blueStrike:
+			currentCharacter = &g.blueCharacter
+			nextState = playingBlue
+		case pinkStrike:
+			currentCharacter = &g.pinkCharacter
+			nextState = playingPink
+		case whiteStrike:
+			currentCharacter = &g.whiteCharacter
+			nextState = playingWhite
+		}
+		currentCharacter.strikeCurrentFrame++
+		if currentCharacter.strikeCurrentFrame >= currentCharacter.strikeNumFrames {
+			currentCharacter.state = idle
+			g.state = nextState
 		}
 	}
 

@@ -41,12 +41,15 @@ const (
 	initGame gameState = iota
 	playingBlue
 	blueSpecialMove
+	blueStrike
 	playingWhite
 	whiteSpecialMove
 	whiteSpecialMoveIdle
+	whiteStrike
 	playingPink
 	pinkSpecialMoveDown
 	pinkSpecialMoveUp
+	pinkStrike
 )
 
 // Errors for communications with main program
@@ -63,8 +66,8 @@ func (g *Game) Init() (err error) {
 	}
 
 	// Set screen size
-	g.screenWidth = 1500
-	g.screenHeight = 750
+	g.screenWidth = 500
+	g.screenHeight = 250
 
 	// Setup animations
 	g.initAnimation()
