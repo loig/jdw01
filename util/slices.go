@@ -18,33 +18,34 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package util
 
 // Overlap checks if two sorted arrays of consecutive
-// int overlap or are consecutive
+// int overlap or are consecutive or have only one int
+// between them
 func Overlap(s1, s2 []int) bool {
 	return (s1[0] <= s2[0] && s1[len(s1)-1] >= s2[0]) ||
 		(s2[0] <= s1[0] && s2[len(s2)-1] >= s1[0]) ||
 		(s1[len(s1)-1]+1 == s2[0]) ||
-		(s2[len(s2)-1]+1 == s1[0])
+		(s2[len(s2)-1]+1 == s1[0]) ||
+		(s1[len(s1)-1]+2 == s2[0]) ||
+		(s2[len(s2)-1]+2 == s1[0])
 }
 
 // Merge merges two sorted arrays of consecutive int that
 // are known to overlap
 func Merge(s1, s2 []int) []int {
-	res := make([]int, 0)
-	for len(s1) > 0 && len(s2) > 0 {
-		if s1[0] < s2[0] {
-			res = append(res, s1[0])
-			s1 = s1[1:]
-		} else if s1[0] > s2[0] {
-			res = append(res, s2[0])
-			s2 = s2[1:]
-		} else {
-			res = append(res, s1[0])
-			s1 = s1[1:]
-			s2 = s2[1:]
-		}
+	min := s1[0]
+	if s2[0] < min {
+		min = s2[0]
 	}
-	res = append(res, s1...)
-	res = append(res, s2...)
+	max := s1[len(s1)-1]
+	if s2[len(s2)-1] > max {
+		max = s2[len(s2)-1]
+	}
+	res := make([]int, max-min+1)
+	i := 0
+	for v := min; v <= max; v++ {
+		res[i] = v
+		i++
+	}
 	return res
 }
 
