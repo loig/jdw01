@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package world
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 
@@ -56,6 +55,7 @@ func GenerateField(width, height int) (field [][]FieldTile, floorLevel float64) 
 	}
 	// for testing
 	field[tmpFloorLevel-1][25] = traversableWallTile
+	field[tmpFloorLevel-2][25] = traversableWallTile
 	field[tmpFloorLevel-1][29] = traversableWallTile
 	field[tmpFloorLevel-1][30] = destroyableWallTile
 	field[tmpFloorLevel-1][1] = traversableWallTile
@@ -85,7 +85,6 @@ func generateUnderworld(field [][]FieldTile, floorLevel, width, height int) {
 		entryPointsRegister[numEntryPoints-1] = []int{posEntryPoint, posEntryPoint + 1}
 		numEntryPoints--
 	}
-	fmt.Println(entryPointsRegister)
 	// merge entry points that overlap, sort the register
 	tmpRegister := make([][]int, 0)
 	for len(entryPointsRegister) != 0 {
@@ -107,7 +106,6 @@ func generateUnderworld(field [][]FieldTile, floorLevel, width, height int) {
 		tmpRegister = append(tmpRegister, nextEntryPoint)
 	}
 	entryPointsRegister = util.RegisterSort(tmpRegister)
-	fmt.Println(entryPointsRegister)
 	// draw entry points
 	for _, entryPoint := range entryPointsRegister {
 		for _, posx := range entryPoint {
@@ -124,14 +122,11 @@ func generateUnderworld(field [][]FieldTile, floorLevel, width, height int) {
 	}
 	for i := 0; i < len(entryPointsRegister); i++ {
 		if !hasAssociatedIndice[i] {
-			fmt.Print(i, " will be associated with… ")
 			if maxPossibleAssociatedIndice[i] == i+1 {
-				fmt.Println(i)
 				associatedIndice[i] = i
 				hasAssociatedIndice[i] = true
 			} else {
 				j := rand.Intn(maxPossibleAssociatedIndice[i]-i-1) + i + 1
-				fmt.Println(j)
 				associatedIndice[i] = j
 				associatedIndice[j] = i
 				hasAssociatedIndice[i] = true
@@ -142,7 +137,6 @@ func generateUnderworld(field [][]FieldTile, floorLevel, width, height int) {
 			}
 		}
 	}
-	fmt.Println(associatedIndice)
 
 	// 3. Build a cave between each pair of entry points
 	caveBuilt := make([]bool, len(entryPointsRegister))
@@ -176,13 +170,11 @@ func generateUnderworld(field [][]FieldTile, floorLevel, width, height int) {
 }
 
 func buildCave(field [][]FieldTile, floorLevel, height, minDepth, maxDepth, start, end, firstStart, lastEnd int) (higherPoint int) {
-	fmt.Println("floorLevel:", floorLevel, "minDepth:", minDepth, "maxDepth:", maxDepth, "start:", start, "end:", end, "firstStart:", firstStart, "lastEnd:", lastEnd)
 	currentDepth := floorLevel + 1
 	currentMinDepth := floorLevel + 1
 	currentMaxDepth := maxDepth
 	higherPoint = maxDepth
 	for currentx := start + 1; currentx+1 < end; currentx++ {
-		//fmt.Println(currentx, currentDepth, currentMinDepth, currentMaxDepth)
 		// place current underground
 		field[currentDepth][currentx] = backgroundWallTile
 		field[currentDepth][currentx+1] = backgroundWallTile
@@ -249,6 +241,5 @@ func buildCave(field [][]FieldTile, floorLevel, height, minDepth, maxDepth, star
 
 	}
 
-	fmt.Println(higherPoint)
 	return higherPoint
 }

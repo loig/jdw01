@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 import (
-	"fmt"
 	"math"
 )
 
@@ -148,7 +147,6 @@ func (g *Game) tryDownMove(currentCharacter *character) {
 	}
 	if g.state == playingPink {
 		if g.fieldOkForPinkSpecialMove(currentCharacter.x, currentCharacter.y) {
-			fmt.Println("Ok for move")
 			g.state = pinkSpecialMoveDirectDown
 			currentCharacter.specialMoveCurrentFrame = 0
 			currentCharacter.state = specialMove

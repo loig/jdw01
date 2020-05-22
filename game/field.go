@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/loig/jdw01/world"
@@ -104,10 +103,8 @@ func (g *Game) getFieldMove(xinit, yinit, offset float64) fieldMove {
 }
 
 func (g *Game) fieldOkForPinkSpecialMove(x, y float64) bool {
-	fmt.Println("Check for pink")
 	intx := int(math.Round(x))
 	inty := int(math.Round(y))
-	fmt.Println("x,y:", x, y)
 	return len(g.field) > inty+2 &&
 		world.IsBackgroundField(g.field[inty+1][intx]) &&
 		world.IsFloorField(g.field[inty+2][intx])

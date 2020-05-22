@@ -18,8 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 import (
-	"fmt"
-
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/inpututil"
 )
@@ -60,7 +58,6 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(11)):
 			g.tryUpMove(currentCharacter)
 		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(13)):
-			fmt.Println("down")
 			g.tryDownMove(currentCharacter)
 		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(5)):
 			g.tryRightSwitch(currentCharacter)
@@ -85,7 +82,6 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		g.performBlueSpecialMove()
 
 	case pinkSpecialMoveDirectDown:
-		fmt.Println("pinkSpecialMoveDirectDown")
 		g.performPinkSpecialMoveDirectDown()
 
 	case pinkSpecialMoveDown:
