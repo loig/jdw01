@@ -17,7 +17,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package game
 
-import "math"
+import (
+	"fmt"
+	"math"
+)
 
 func (g *Game) tryRightMove(currentCharacter *character) {
 	currentCharacter.facing = right
@@ -28,6 +31,18 @@ func (g *Game) tryRightMove(currentCharacter *character) {
 	case blueFieldMove:
 		if g.state == playingBlue {
 			g.state = blueSpecialMove
+			currentCharacter.state = specialMove
+			currentCharacter.specialMoveCurrentFrame = 0
+		} else {
+			currentCharacter.state = idle
+		}
+	case blueOrPinkUpFieldMove:
+		if g.state == playingBlue {
+			g.state = blueSpecialMove
+			currentCharacter.state = specialMove
+			currentCharacter.specialMoveCurrentFrame = 0
+		} else if g.state == playingPink {
+			g.state = pinkSpecialMoveUp
 			currentCharacter.state = specialMove
 			currentCharacter.specialMoveCurrentFrame = 0
 		} else {
@@ -68,6 +83,18 @@ func (g *Game) tryLeftMove(currentCharacter *character) {
 	case blueFieldMove:
 		if g.state == playingBlue {
 			g.state = blueSpecialMove
+			currentCharacter.state = specialMove
+			currentCharacter.specialMoveCurrentFrame = 0
+		} else {
+			currentCharacter.state = idle
+		}
+	case blueOrPinkUpFieldMove:
+		if g.state == playingBlue {
+			g.state = blueSpecialMove
+			currentCharacter.state = specialMove
+			currentCharacter.specialMoveCurrentFrame = 0
+		} else if g.state == playingPink {
+			g.state = pinkSpecialMoveUp
 			currentCharacter.state = specialMove
 			currentCharacter.specialMoveCurrentFrame = 0
 		} else {
@@ -117,5 +144,16 @@ func (g *Game) tryDownMove(currentCharacter *character) {
 			currentCharacter.x = math.Round(currentCharacter.x)
 			currentCharacter.y += 0.5
 		}
+		return
+	}
+	if g.state == playingPink {
+		if g.fieldOkForPinkSpecialMove(currentCharacter.x, currentCharacter.y) {
+			fmt.Println("Ok for move")
+			g.state = pinkSpecialMoveDirectDown
+			currentCharacter.specialMoveCurrentFrame = 0
+			currentCharacter.state = specialMove
+			currentCharacter.x = math.Round(currentCharacter.x)
+		}
+		return
 	}
 }

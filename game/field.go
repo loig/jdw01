@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 import (
+	"fmt"
 	"math"
 
 	"github.com/loig/jdw01/world"
@@ -29,6 +30,7 @@ const (
 	noFieldMove fieldMove = iota
 	normalFieldMove
 	blueFieldMove
+	blueOrPinkUpFieldMove
 	pinkUpFieldMove
 	pinkDownFieldMove
 	pinkDownFieldMoveOrNormalMove
@@ -55,7 +57,8 @@ func (g *Game) getFieldMove(xinit, yinit, offset float64) fieldMove {
 		(len(g.field) >= inty+3) &&
 		world.IsFloorField(g.field[inty+2][intx]) {
 		if world.IsFloorField(g.field[inty+1][intx]) {
-			return pinkDownFieldMoveOrNormalMove
+			//return pinkDownFieldMoveOrNormalMove
+			return normalFieldMove
 		}
 		return pinkDownFieldMove
 	}
@@ -63,16 +66,28 @@ func (g *Game) getFieldMove(xinit, yinit, offset float64) fieldMove {
 		return noFieldMove
 	}
 	if !world.IsBackgroundField(g.field[inty][intx]) {
-		if world.IsTraversableField(g.field[inty][intx]) &&
-			((offset >= 0 &&
+		if world.IsTraversableField(g.field[inty][intx]) {
+			okForBlue := ((offset >= 0 &&
 				len(g.field[inty+1]) >= intx+2 &&
 				world.IsFloorField(g.field[inty+1][intx+1]) &&
 				world.IsBackgroundField(g.field[inty][intx+1])) ||
 				(offset < 0 &&
 					intx >= 1 &&
 					world.IsFloorField(g.field[inty+1][intx-1]) &&
-					world.IsBackgroundField(g.field[inty][intx-1]))) {
-			return blueFieldMove
+					world.IsBackgroundField(g.field[inty][intx-1])))
+			okForPink := (inty >= 1 &&
+				((offset >= 0 && intx >= 1 &&
+					world.IsBackgroundField(g.field[inty-1][intx-1])) ||
+					(offset < 0 && intx < len(g.field[inty-1]) &&
+						world.IsBackgroundField(g.field[inty-1][intx+1]))) &&
+				world.IsBackgroundField(g.field[inty-1][intx]) &&
+				world.IsFloorField(g.field[inty][intx]))
+			if okForBlue && okForPink {
+				return blueOrPinkUpFieldMove
+			} else if okForBlue {
+				return blueFieldMove
+			}
+			return pinkUpFieldMove
 		}
 		if inty >= 1 &&
 			((offset >= 0 && intx >= 1 &&
@@ -86,6 +101,16 @@ func (g *Game) getFieldMove(xinit, yinit, offset float64) fieldMove {
 		return noFieldMove
 	}
 	return normalFieldMove
+}
+
+func (g *Game) fieldOkForPinkSpecialMove(x, y float64) bool {
+	fmt.Println("Check for pink")
+	intx := int(math.Round(x))
+	inty := int(math.Round(y))
+	fmt.Println("x,y:", x, y)
+	return len(g.field) > inty+2 &&
+		world.IsBackgroundField(g.field[inty+1][intx]) &&
+		world.IsFloorField(g.field[inty+2][intx])
 }
 
 func (g *Game) fieldOkForWhiteSpecialMove(x, y float64, direction int) bool {

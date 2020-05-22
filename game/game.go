@@ -49,6 +49,7 @@ const (
 	whiteSpecialMoveIdle
 	whiteStrike
 	playingPink
+	pinkSpecialMoveDirectDown
 	pinkSpecialMoveDown
 	pinkSpecialMoveUp
 	pinkStrike
