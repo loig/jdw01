@@ -31,6 +31,7 @@ const (
 	blueFieldMove
 	pinkUpFieldMove
 	pinkDownFieldMove
+	pinkDownFieldMoveOrNormalMove
 	endOfLaderFieldMove
 )
 
@@ -49,13 +50,17 @@ func (g *Game) getFieldMove(xinit, yinit, offset float64) fieldMove {
 	if (offset >= 0 && len(g.field[inty+1]) < intx+1) || (offset < 0 && intx < 0) {
 		return noFieldMove
 	}
-	if !(world.IsFloorField(g.field[inty+1][intx])) {
-		if world.IsBackgroundField(g.field[inty+1][intx]) &&
-			world.IsBackgroundField(g.field[inty][intx]) &&
-			(len(g.field) >= inty+3) &&
-			world.IsFloorField(g.field[inty+2][intx]) {
+	if world.IsBackgroundField(g.field[inty+1][intx]) &&
+		world.IsBackgroundField(g.field[inty][intx]) &&
+		(len(g.field) >= inty+3) &&
+		world.IsFloorField(g.field[inty+2][intx]) {
+		if world.IsFloorField(g.field[inty+1][intx]) {
+			return pinkDownFieldMoveOrNormalMove
+		} else {
 			return pinkDownFieldMove
 		}
+	}
+	if !(world.IsFloorField(g.field[inty+1][intx])) {
 		return noFieldMove
 	}
 	if !world.IsBackgroundField(g.field[inty][intx]) {

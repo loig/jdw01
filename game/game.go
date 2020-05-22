@@ -74,24 +74,29 @@ func (g *Game) Init() (err error) {
 	// Setup animations
 	g.initAnimation()
 
+	// World size
+	fieldWidth := 100
+	fieldHeight := 40
+
+	// Set field
+	var floorLevel float64
+	g.field, floorLevel = world.GenerateField(fieldWidth, fieldHeight)
+
 	// Initial positions of characters
-	g.blueCharacter.x = 3
-	g.blueCharacter.y = 7
+	g.blueCharacter.x = 10
+	g.blueCharacter.y = floorLevel
 	g.blueCharacter.state = idle
 	g.blueCharacter.speed = 0.1
 
-	g.whiteCharacter.x = g.blueCharacter.x
-	g.whiteCharacter.y = g.blueCharacter.y - 3
+	g.whiteCharacter.x = g.blueCharacter.x + 2
+	g.whiteCharacter.y = floorLevel
 	g.whiteCharacter.state = idle
 	g.whiteCharacter.speed = 0.08
 
-	g.pinkCharacter.x = g.blueCharacter.x
-	g.pinkCharacter.y = g.blueCharacter.y + 3
+	g.pinkCharacter.x = g.blueCharacter.x - 3
+	g.pinkCharacter.y = floorLevel
 	g.pinkCharacter.state = idle
 	g.pinkCharacter.speed = 0.12
-
-	// Set field
-	g.field = world.GenerateField()
 
 	// Set camera
 	g.setCameraPosition()

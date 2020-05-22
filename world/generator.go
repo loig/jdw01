@@ -17,22 +17,96 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package world
 
+import (
+	"fmt"
+	"math/rand"
+	"time"
+
+	"github.com/loig/jdw01/util"
+)
+
+const (
+	minTilesPerUnderworldEntryPoint = 12
+	minEntryPoints                  = 5
+)
+
 // GenerateField generates a field and returns it
-func GenerateField() [][]FieldTile {
-	return [][]FieldTile{
-		[]FieldTile{nothingTile, nothingTile, nothingTile, detstroyableWallTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]FieldTile{floorTile, floorTile, floorladerTile, floorTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]FieldTile{nothingTile, nothingTile, floorladerTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]FieldTile{nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]FieldTile{nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]FieldTile{nothingTile, floorTile, floorTile, floorTile, floorTile, floorladerTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]FieldTile{nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]FieldTile{nothingTile, traversableWallTile, nothingTile, nothingTile, nothingTile, laderTile, detstroyableWallTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]FieldTile{floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]FieldTile{nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]FieldTile{backgroundWallTile, backgroundWallTile, backgroundWallTile, backgroundWallTile, backgroundWallTile, backgroundWallTile, backgroundWallTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]FieldTile{backgroundWallTile, backgroundWallTile, floorTile, floorTile, underworldDestroyableWallTile, backgroundWallTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile},
-		[]FieldTile{backgroundWallTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]FieldTile{floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+func GenerateField(width, height int) (field [][]FieldTile, floorLevel float64) {
+	// seeding the random generator
+	rand.Seed(time.Now().UTC().UnixNano())
+
+	tmpFloorLevel := height * 2 / 3
+	field = make([][]FieldTile, height)
+	for y := 0; y < height; y++ {
+		field[y] = make([]FieldTile, width)
+		switch {
+		case y == tmpFloorLevel:
+			for x := 0; x < width; x++ {
+				field[y][x] = floorLevelfloorTile
+			}
+		case y < tmpFloorLevel:
+			for x := 0; x < width; x++ {
+				field[y][x] = nothingTile
+			}
+		case y > tmpFloorLevel:
+			for x := 0; x < width; x++ {
+				field[y][x] = floorTile
+			}
+		}
 	}
+	generateUnderworld(field, tmpFloorLevel, width)
+	return field, float64(tmpFloorLevel - 1)
+}
+
+func generateUnderworld(field [][]FieldTile, floorLevel, width int) {
+	// generate entry points to the underworld
+	numEntryPoints := rand.Intn((width-2*minTilesPerUnderworldEntryPoint)/minTilesPerUnderworldEntryPoint) + 2
+	if numEntryPoints < minEntryPoints {
+		numEntryPoints = minEntryPoints
+	}
+	entryPointsRegister := make([][]int, numEntryPoints)
+	// first entry point, necessarily in the first tiles
+	posEntryPoint := rand.Intn(minTilesPerUnderworldEntryPoint-2) + 1
+	field[floorLevel][posEntryPoint] = floorLevelBackgroundWallTile
+	field[floorLevel][posEntryPoint+1] = floorLevelBackgroundWallTile
+	entryPointsRegister[numEntryPoints-1] = []int{posEntryPoint, posEntryPoint + 1}
+	numEntryPoints--
+	// last entry point, necessarily in the last tiles
+	posEntryPoint = width - rand.Intn(minTilesPerUnderworldEntryPoint-2) - 2
+	field[floorLevel][posEntryPoint] = floorLevelBackgroundWallTile
+	field[floorLevel][posEntryPoint-1] = floorLevelBackgroundWallTile
+	entryPointsRegister[numEntryPoints-1] = []int{posEntryPoint - 1, posEntryPoint}
+	numEntryPoints--
+	// other entry points
+	for numEntryPoints > 0 {
+		posEntryPoint = rand.Intn(width-minTilesPerUnderworldEntryPoint*2) + minTilesPerUnderworldEntryPoint
+		field[floorLevel][posEntryPoint] = floorLevelBackgroundWallTile
+		field[floorLevel][posEntryPoint+1] = floorLevelBackgroundWallTile
+		entryPointsRegister[numEntryPoints-1] = []int{posEntryPoint, posEntryPoint + 1}
+		numEntryPoints--
+	}
+	fmt.Println(entryPointsRegister)
+	// merge entry points that overlap, sort the register
+	tmpRegister := make([][]int, 0)
+	for len(entryPointsRegister) != 0 {
+		nextEntryPoint := entryPointsRegister[0]
+		entryPointsRegister = entryPointsRegister[1:len(entryPointsRegister)]
+		overlaping := make([]int, 0)
+		for i, entryPoint := range entryPointsRegister {
+			if util.Overlap(nextEntryPoint, entryPoint) {
+				overlaping = append(overlaping, i)
+				nextEntryPoint = util.Merge(nextEntryPoint, entryPoint)
+			}
+		}
+		for i := len(overlaping) - 1; i >= 0; i-- {
+			entryPointsRegister = append(
+				entryPointsRegister[:overlaping[i]],
+				entryPointsRegister[overlaping[i]+1:]...,
+			)
+		}
+		tmpRegister = append(tmpRegister, nextEntryPoint)
+	}
+	entryPointsRegister = util.RegisterSort(tmpRegister)
+	fmt.Println(entryPointsRegister)
+
 }

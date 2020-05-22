@@ -66,6 +66,9 @@ func IsFloorField(field FieldTile) bool {
 	case floor, destroyableWall, traversableWall, wall:
 		return true
 	}
+	if field.Decoration.kind == floor {
+		return true
+	}
 	return false
 }
 

@@ -33,6 +33,15 @@ func (g *Game) tryRightMove(currentCharacter *character) {
 		} else {
 			currentCharacter.state = idle
 		}
+	case pinkDownFieldMoveOrNormalMove:
+		if g.state == playingPink {
+			g.state = pinkSpecialMoveDown
+			currentCharacter.state = specialMove
+			currentCharacter.specialMoveCurrentFrame = 0
+		} else {
+			currentCharacter.x += currentCharacter.speed
+			currentCharacter.state = move
+		}
 	case pinkDownFieldMove:
 		if g.state == playingPink {
 			g.state = pinkSpecialMoveDown
@@ -63,6 +72,15 @@ func (g *Game) tryLeftMove(currentCharacter *character) {
 			currentCharacter.specialMoveCurrentFrame = 0
 		} else {
 			currentCharacter.state = idle
+		}
+	case pinkDownFieldMoveOrNormalMove:
+		if g.state == playingPink {
+			g.state = pinkSpecialMoveDown
+			currentCharacter.state = specialMove
+			currentCharacter.specialMoveCurrentFrame = 0
+		} else {
+			currentCharacter.x -= currentCharacter.speed
+			currentCharacter.state = move
 		}
 	case pinkDownFieldMove:
 		if g.state == playingPink {
