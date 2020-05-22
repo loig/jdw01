@@ -19,67 +19,9 @@ package game
 
 import (
 	"math"
+
+	"github.com/loig/jdw01/world"
 )
-
-type fieldTile struct {
-	tile       fieldType
-	decoration fieldType
-	destructed fieldType
-}
-
-type fieldType struct {
-	kind  fieldKind
-	lookX int
-	lookY int
-}
-
-type fieldKind int
-
-const (
-	floor fieldKind = iota
-	traversableWall
-	wall
-	backgroundWall
-	lader
-	nothing
-	floorLader
-)
-
-func isBackgroundField(field fieldTile) bool {
-	switch field.tile.kind {
-	case nothing, backgroundWall, lader:
-		return true
-	}
-	return false
-}
-
-func isLaderField(field fieldTile) bool {
-	return field.tile.kind == lader || field.decoration.kind == lader
-}
-
-func isFloorField(field fieldTile) bool {
-	switch field.tile.kind {
-	case floor, floorLader, wall, traversableWall:
-		return true
-	}
-	return false
-}
-
-func isTraversableField(field fieldTile) bool {
-	switch field.tile.kind {
-	case traversableWall:
-		return true
-	}
-	return false
-}
-
-func isBreakableField(field fieldTile) bool {
-	switch field.tile.kind {
-	case wall:
-		return true
-	}
-	return false
-}
 
 type fieldMove int
 
@@ -107,30 +49,30 @@ func (g *Game) getFieldMove(xinit, yinit, offset float64) fieldMove {
 	if (offset >= 0 && len(g.field[inty+1]) < intx+1) || (offset < 0 && intx < 0) {
 		return noFieldMove
 	}
-	if !(isFloorField(g.field[inty+1][intx])) {
-		if isBackgroundField(g.field[inty+1][intx]) &&
-			isBackgroundField(g.field[inty][intx]) &&
+	if !(world.IsFloorField(g.field[inty+1][intx])) {
+		if world.IsBackgroundField(g.field[inty+1][intx]) &&
+			world.IsBackgroundField(g.field[inty][intx]) &&
 			(len(g.field) >= inty+3) &&
-			isFloorField(g.field[inty+2][intx]) {
+			world.IsFloorField(g.field[inty+2][intx]) {
 			return pinkDownFieldMove
 		}
 		return noFieldMove
 	}
-	if !isBackgroundField(g.field[inty][intx]) {
+	if !world.IsBackgroundField(g.field[inty][intx]) {
 		if (offset >= 0 &&
 			len(g.field[inty+1]) >= intx+2 &&
-			isFloorField(g.field[inty+1][intx+1]) &&
-			isBackgroundField(g.field[inty][intx+1])) ||
+			world.IsFloorField(g.field[inty+1][intx+1]) &&
+			world.IsBackgroundField(g.field[inty][intx+1])) ||
 			(offset < 0 &&
 				intx >= 1 &&
-				isFloorField(g.field[inty+1][intx-1]) &&
-				isBackgroundField(g.field[inty][intx-1])) {
+				world.IsFloorField(g.field[inty+1][intx-1]) &&
+				world.IsBackgroundField(g.field[inty][intx-1])) {
 			return blueFieldMove
 		}
 		if inty >= 1 && intx >= 1 &&
-			isBackgroundField(g.field[inty-1][intx-1]) &&
-			isBackgroundField(g.field[inty-1][intx]) &&
-			isFloorField(g.field[inty][intx]) {
+			world.IsBackgroundField(g.field[inty-1][intx-1]) &&
+			world.IsBackgroundField(g.field[inty-1][intx]) &&
+			world.IsFloorField(g.field[inty][intx]) {
 			return pinkUpFieldMove
 		}
 		return noFieldMove
@@ -144,10 +86,10 @@ func (g *Game) fieldOkForWhiteSpecialMove(x, y float64, direction int) bool {
 	switch {
 	case direction < 0:
 		//go up
-		return isLaderField(g.field[inty][intx])
+		return world.IsLaderField(g.field[inty][intx])
 	case direction > 0:
 		//go down
-		return len(g.field) > inty+1 && isLaderField(g.field[inty+1][intx])
+		return len(g.field) > inty+1 && world.IsLaderField(g.field[inty+1][intx])
 	}
 	return false
 }
@@ -165,25 +107,25 @@ func (g *Game) getLaderFieldMove(xinit, yinit, offset float64) fieldMove {
 		if inty >= len(g.field) || intx < 0 || intx >= len(g.field[inty]) {
 			return noFieldMove
 		}
-		if !isBackgroundField(g.field[inty][intx]) &&
-			!isLaderField(g.field[inty][intx]) &&
-			!isFloorField(g.field[inty][intx]) {
+		if !world.IsBackgroundField(g.field[inty][intx]) &&
+			!world.IsLaderField(g.field[inty][intx]) &&
+			!world.IsFloorField(g.field[inty][intx]) {
 			return noFieldMove
 		}
-		if isFloorField(g.field[inty][intx]) &&
-			!isLaderField(g.field[inty][intx]) {
+		if world.IsFloorField(g.field[inty][intx]) &&
+			!world.IsLaderField(g.field[inty][intx]) {
 			return endOfLaderFieldMove
 		}
 	} else {
-		if inty+1 >= 0 && inty+2 < len(g.field) && intx < len(g.field[inty+1]) && intx < len(g.field[inty+2]) && isFloorField(g.field[inty+2][intx]) &&
-			!isLaderField(g.field[inty+1][intx]) {
+		if inty+1 >= 0 && inty+2 < len(g.field) && intx < len(g.field[inty+1]) && intx < len(g.field[inty+2]) && world.IsFloorField(g.field[inty+2][intx]) &&
+			!world.IsLaderField(g.field[inty+1][intx]) {
 			return endOfLaderFieldMove
 		}
 		if inty < 0 || intx < 0 || intx >= len(g.field[inty]) {
 			return noFieldMove
 		}
-		if !isBackgroundField(g.field[inty][intx]) &&
-			!isLaderField(g.field[inty][intx]) {
+		if !world.IsBackgroundField(g.field[inty][intx]) &&
+			!world.IsLaderField(g.field[inty][intx]) {
 			return noFieldMove
 		}
 	}
@@ -201,48 +143,8 @@ func (g *Game) strikeEffectOnField(xinit, yinit float64, direction int) {
 	intx := int(math.Round(xreach))
 	inty := int(math.Round(yinit))
 	if inty >= 0 && inty < len(g.field) && intx >= 0 && intx < len(g.field[inty]) {
-		if isBreakableField(g.field[inty][intx]) {
-			g.field[inty][intx].tile = g.field[inty][intx].destructed
+		if world.IsBreakableField(g.field[inty][intx]) {
+			g.field[inty][intx].Tile = g.field[inty][intx].Destructed
 		}
 	}
-}
-
-var (
-	nothingType         = fieldType{nothing, 10, 1}
-	wallType            = fieldType{wall, 4, 2}
-	traversableWallType = fieldType{traversableWall, 7, 3}
-	backgroundWallType  = fieldType{backgroundWall, 4, 0}
-	floorType           = fieldType{floor, 3, 0}
-	laderType           = fieldType{lader, 8, 4}
-)
-
-var (
-	nothingTile         = fieldTile{nothingType, nothingType, nothingType}
-	wallTile            = fieldTile{wallType, nothingType, nothingType}
-	underWorldWallTile  = fieldTile{wallType, nothingType, backgroundWallType}
-	traversableWallTile = fieldTile{traversableWallType, nothingType, nothingType}
-	backgroundWallTile  = fieldTile{backgroundWallType, nothingType, nothingType}
-	floorTile           = fieldTile{floorType, nothingType, nothingType}
-	laderTile           = fieldTile{laderType, nothingType, nothingType}
-	floorladerTile      = fieldTile{floorType, laderType, nothingType}
-)
-
-func (g *Game) setInitialField() {
-	field := [][]fieldTile{
-		[]fieldTile{nothingTile, nothingTile, nothingTile, wallTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{floorTile, floorTile, floorladerTile, floorTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{nothingTile, nothingTile, floorladerTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{nothingTile, floorTile, floorTile, floorTile, floorTile, floorladerTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{nothingTile, traversableWallTile, nothingTile, nothingTile, nothingTile, laderTile, wallTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{backgroundWallTile, backgroundWallTile, backgroundWallTile, backgroundWallTile, backgroundWallTile, backgroundWallTile, backgroundWallTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{backgroundWallTile, backgroundWallTile, floorTile, floorTile, underWorldWallTile, backgroundWallTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile},
-		[]fieldTile{backgroundWallTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-	}
-	g.field = field
 }

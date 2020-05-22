@@ -19,6 +19,8 @@ package game
 
 import (
 	"errors"
+
+	"github.com/loig/jdw01/world"
 )
 
 // Game implements ebiten.Game interface
@@ -31,7 +33,7 @@ type Game struct {
 	blueCharacter  character
 	whiteCharacter character
 	pinkCharacter  character
-	field          [][]fieldTile
+	field          [][]world.FieldTile
 }
 
 // Current state of the game
@@ -89,7 +91,7 @@ func (g *Game) Init() (err error) {
 	g.pinkCharacter.speed = 0.12
 
 	// Set field
-	g.setInitialField()
+	g.field = world.GenerateField()
 
 	// Set camera
 	g.setCameraPosition()
