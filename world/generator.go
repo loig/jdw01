@@ -54,6 +54,12 @@ func GenerateField(width, height int) (field [][]FieldTile, floorLevel float64) 
 			}
 		}
 	}
+	// for testing
+	field[tmpFloorLevel-1][25] = traversableWallTile
+	field[tmpFloorLevel-1][29] = traversableWallTile
+	field[tmpFloorLevel-1][30] = destroyableWallTile
+	field[tmpFloorLevel-1][1] = traversableWallTile
+	field[tmpFloorLevel-1][0] = destroyableWallTile
 	generateUnderworld(field, tmpFloorLevel, width, height)
 	return field, float64(tmpFloorLevel - 1)
 }
@@ -142,7 +148,7 @@ func generateUnderworld(field [][]FieldTile, floorLevel, width, height int) {
 	caveBuilt := make([]bool, len(entryPointsRegister))
 	maxDepth := make([]int, len(entryPointsRegister))
 	for i := 0; i < len(entryPointsRegister); i++ {
-		maxDepth[i] = height
+		maxDepth[i] = height - 1
 	}
 	//for i := 0; i < len(entryPointsRegister); i++ {
 	for i := 0; i < 1; i++ {

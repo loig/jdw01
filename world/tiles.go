@@ -29,7 +29,7 @@ var (
 
 var (
 	nothingTile                   = FieldTile{nothingType, nothingType, nothingType}
-	detstroyableWallTile          = FieldTile{destroyableWallType, nothingType, nothingType}
+	destroyableWallTile           = FieldTile{destroyableWallType, nothingType, nothingType}
 	underworldDestroyableWallTile = FieldTile{destroyableWallType, nothingType, backgroundWallType}
 	traversableWallTile           = FieldTile{traversableWallType, nothingType, nothingType}
 	backgroundWallTile            = FieldTile{backgroundWallType, nothingType, nothingType}

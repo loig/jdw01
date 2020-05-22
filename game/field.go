@@ -56,26 +56,29 @@ func (g *Game) getFieldMove(xinit, yinit, offset float64) fieldMove {
 		world.IsFloorField(g.field[inty+2][intx]) {
 		if world.IsFloorField(g.field[inty+1][intx]) {
 			return pinkDownFieldMoveOrNormalMove
-		} else {
-			return pinkDownFieldMove
 		}
+		return pinkDownFieldMove
 	}
 	if !(world.IsFloorField(g.field[inty+1][intx])) {
 		return noFieldMove
 	}
 	if !world.IsBackgroundField(g.field[inty][intx]) {
-		if (offset >= 0 &&
-			len(g.field[inty+1]) >= intx+2 &&
-			world.IsFloorField(g.field[inty+1][intx+1]) &&
-			world.IsBackgroundField(g.field[inty][intx+1])) ||
-			(offset < 0 &&
-				intx >= 1 &&
-				world.IsFloorField(g.field[inty+1][intx-1]) &&
-				world.IsBackgroundField(g.field[inty][intx-1])) {
+		if world.IsTraversableField(g.field[inty][intx]) &&
+			((offset >= 0 &&
+				len(g.field[inty+1]) >= intx+2 &&
+				world.IsFloorField(g.field[inty+1][intx+1]) &&
+				world.IsBackgroundField(g.field[inty][intx+1])) ||
+				(offset < 0 &&
+					intx >= 1 &&
+					world.IsFloorField(g.field[inty+1][intx-1]) &&
+					world.IsBackgroundField(g.field[inty][intx-1]))) {
 			return blueFieldMove
 		}
-		if inty >= 1 && intx >= 1 &&
-			world.IsBackgroundField(g.field[inty-1][intx-1]) &&
+		if inty >= 1 &&
+			((offset >= 0 && intx >= 1 &&
+				world.IsBackgroundField(g.field[inty-1][intx-1])) ||
+				(offset < 0 && intx < len(g.field[inty-1]) &&
+					world.IsBackgroundField(g.field[inty-1][intx+1]))) &&
 			world.IsBackgroundField(g.field[inty-1][intx]) &&
 			world.IsFloorField(g.field[inty][intx]) {
 			return pinkUpFieldMove
