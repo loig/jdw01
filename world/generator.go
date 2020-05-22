@@ -59,7 +59,7 @@ func GenerateField(width, height int) (field [][]FieldTile, floorLevel float64) 
 }
 
 func generateUnderworld(field [][]FieldTile, floorLevel, width int) {
-	// generate entry points to the underworld
+	// 1. generate entry points to the underworld
 	numEntryPoints := rand.Intn((width-2*minTilesPerUnderworldEntryPoint)/minTilesPerUnderworldEntryPoint) + 2
 	if numEntryPoints < minEntryPoints {
 		numEntryPoints = minEntryPoints
@@ -108,5 +108,36 @@ func generateUnderworld(field [][]FieldTile, floorLevel, width int) {
 	}
 	entryPointsRegister = util.RegisterSort(tmpRegister)
 	fmt.Println(entryPointsRegister)
+
+	// 2. Associate entry points
+	maxPossibleAssociatedIndice := make([]int, len(entryPointsRegister))
+	associatedIndice := make([]int, len(entryPointsRegister))
+	hasAssociatedIndice := make([]bool, len(entryPointsRegister))
+	for i := 0; i < len(entryPointsRegister); i++ {
+		maxPossibleAssociatedIndice[i] = len(entryPointsRegister)
+	}
+	for i := 0; i < len(entryPointsRegister); i++ {
+		if !hasAssociatedIndice[i] {
+			fmt.Print(i, " will be associated with… ")
+			if maxPossibleAssociatedIndice[i] == i+1 {
+				fmt.Println(i)
+				associatedIndice[i] = i
+				hasAssociatedIndice[i] = true
+			} else {
+				j := rand.Intn(maxPossibleAssociatedIndice[i]-i-1) + i + 1
+				fmt.Println(j)
+				associatedIndice[i] = j
+				associatedIndice[j] = i
+				hasAssociatedIndice[i] = true
+				hasAssociatedIndice[j] = true
+				for k := i + 1; k < j; k++ {
+					maxPossibleAssociatedIndice[k] = j
+				}
+			}
+		}
+	}
+	fmt.Println(associatedIndice)
+
+	// 3. Build a cave between each pair of entry points
 
 }
