@@ -161,24 +161,33 @@ func (g *Game) getLaderFieldMove(xinit, yinit, offset float64) fieldMove {
 	}
 	intx := int(math.Round(xinit))
 	inty := int(math.Round(yreach))
-	if inty < 0 || (offset < 0 &&
-		!isBackgroundField(g.field[inty][intx]) &&
-		!isLaderField(g.field[inty][intx])) ||
-		inty >= len(g.field) ||
-		(offset >= 0 &&
-			!isBackgroundField(g.field[inty][intx]) &&
+	if offset >= 0 {
+		if inty >= len(g.field) || intx < 0 || intx >= len(g.field[inty]) {
+			return noFieldMove
+		}
+		if !isBackgroundField(g.field[inty][intx]) &&
 			!isLaderField(g.field[inty][intx]) &&
-			!isFloorField(g.field[inty][intx])) {
-		return noFieldMove
+			!isFloorField(g.field[inty][intx]) {
+			return noFieldMove
+		}
+		if isFloorField(g.field[inty][intx]) &&
+			!isLaderField(g.field[inty][intx]) {
+			return endOfLaderFieldMove
+		}
+	} else {
+		if inty+1 >= 0 && inty+2 < len(g.field) && intx < len(g.field[inty+1]) && intx < len(g.field[inty+2]) && isFloorField(g.field[inty+2][intx]) &&
+			!isLaderField(g.field[inty+1][intx]) {
+			return endOfLaderFieldMove
+		}
+		if inty < 0 || intx < 0 || intx >= len(g.field[inty]) {
+			return noFieldMove
+		}
+		if !isBackgroundField(g.field[inty][intx]) &&
+			!isLaderField(g.field[inty][intx]) {
+			return noFieldMove
+		}
 	}
-	if (offset >= 0 &&
-		isFloorField(g.field[inty][intx]) &&
-		!isLaderField(g.field[inty][intx])) ||
-		(offset < 0 &&
-			isFloorField(g.field[inty+2][intx]) &&
-			!isLaderField(g.field[inty][intx])) {
-		return endOfLaderFieldMove
-	}
+
 	return normalFieldMove
 }
 
@@ -222,7 +231,7 @@ func (g *Game) setInitialField() {
 	field := [][]fieldTile{
 		[]fieldTile{nothingTile, nothingTile, nothingTile, wallTile, nothingTile, nothingTile, nothingTile},
 		[]fieldTile{floorTile, floorTile, floorladerTile, floorTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
+		[]fieldTile{nothingTile, nothingTile, floorladerTile, nothingTile, nothingTile, nothingTile, nothingTile},
 		[]fieldTile{nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
 		[]fieldTile{nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
 		[]fieldTile{nothingTile, floorTile, floorTile, floorTile, floorTile, floorladerTile, nothingTile},
