@@ -148,10 +148,10 @@ func generateUnderworld(field [][]FieldTile, floorLevel, width, height int) {
 	caveBuilt := make([]bool, len(entryPointsRegister))
 	maxDepth := make([]int, len(entryPointsRegister))
 	for i := 0; i < len(entryPointsRegister); i++ {
-		maxDepth[i] = height - 1
+		maxDepth[i] = height - 2
 	}
-	//for i := 0; i < len(entryPointsRegister); i++ {
-	for i := 0; i < 1; i++ {
+	for i := 0; i < len(entryPointsRegister); i++ {
+		//for i := 0; i < 1; i++ {
 		if !caveBuilt[i] {
 			j := associatedIndice[i]
 			caveBuilt[i] = true
@@ -168,7 +168,7 @@ func generateUnderworld(field [][]FieldTile, floorLevel, width, height int) {
 			end := entryPointsRegister[j][len(entryPointsRegister[j])-1]
 			higherPoint := buildCave(field, floorLevel, height, minDepth, maxDepth[i], start, end, firstStart, lastEnd)
 			for k := i + 1; k < j; k++ {
-				maxDepth[k] = higherPoint
+				maxDepth[k] = higherPoint - 2
 			}
 		}
 	}
@@ -179,12 +179,22 @@ func buildCave(field [][]FieldTile, floorLevel, height, minDepth, maxDepth, star
 	fmt.Println("floorLevel:", floorLevel, "minDepth:", minDepth, "maxDepth:", maxDepth, "start:", start, "end:", end, "firstStart:", firstStart, "lastEnd:", lastEnd)
 	currentDepth := floorLevel + 1
 	currentMinDepth := floorLevel + 1
-	currentMaxDepth := maxDepth // to update
+	currentMaxDepth := maxDepth
+	higherPoint = maxDepth
 	for currentx := start + 1; currentx+1 < end; currentx++ {
 		//fmt.Println(currentx, currentDepth, currentMinDepth, currentMaxDepth)
 		// place current underground
 		field[currentDepth][currentx] = backgroundWallTile
 		field[currentDepth][currentx+1] = backgroundWallTile
+
+		// update higherPoint
+		if firstStart >= 0 {
+			if currentx >= firstStart-1 && currentx+1 <= lastEnd {
+				if currentDepth < higherPoint {
+					higherPoint = currentDepth
+				}
+			}
+		}
 
 		// update currentMinDepth
 		if firstStart >= 0 {
@@ -221,16 +231,16 @@ func buildCave(field [][]FieldTile, floorLevel, height, minDepth, maxDepth, star
 		}
 
 		// else choose
-		switch rand.Intn(3) {
-		case 0:
+		switch rand.Intn(6) {
+		case 0, 1:
 			// goUp
 			if currentDepth-1 >= currentMinDepth {
 				currentDepth--
 			}
-		case 1:
+		case 2:
 			// don't change depth
 			continue
-		case 2:
+		case 3, 4, 5:
 			// goDown
 			if currentDepth+1 <= currentMaxDepth {
 				currentDepth++
@@ -239,30 +249,6 @@ func buildCave(field [][]FieldTile, floorLevel, height, minDepth, maxDepth, star
 
 	}
 
-	/*
-		x := start + 1
-		if firstStart != -1 {
-			// Go down only to reach minDepth before firstStart + minDepth
-			for x < firstStart+minDepth {
-				if currentDepth == floorLevel {
-					currentDepth++
-					field[currentDepth][x] = backgroundWallTile
-					field[currentDepth][x+1] = backgroundWallTile
-				} else if x+1+(minDepth-currentDepth) < firstStart+minDepth-floorLevel-2 {
-					// Do anything, if it does not prevent to reach minDepth at a good moment
-					field[currentDepth][x] = backgroundWallTile
-					field[currentDepth][x+1] = backgroundWallTile
-				} else if x+1+(minDepth-currentDepth) == firstStart+minDepth-floorLevel-2 {
-					// must go down at any cost
-					currentDepth++
-					field[currentDepth][x] = backgroundWallTile
-					field[currentDepth][x+1] = backgroundWallTile
-				} else {
-					fmt.Println("oups")
-				}
-				x++
-			}
-		}
-	*/
-	return 0
+	fmt.Println(higherPoint)
+	return higherPoint
 }
