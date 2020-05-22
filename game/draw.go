@@ -38,17 +38,15 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			op.GeoM.Translate(float64(x)*32, float64(y)*32)
 			g.applyCamera(op)
 			sub = image.Rect(
-				16*g.field[y][x].tileLookX, 16*g.field[y][x].tileLookY,
-				16+16*g.field[y][x].tileLookX, 16+16*g.field[y][x].tileLookY,
+				16*g.field[y][x].tile.lookX, 16*g.field[y][x].tile.lookY,
+				16+16*g.field[y][x].tile.lookX, 16+16*g.field[y][x].tile.lookY,
 			)
 			screen.DrawImage(tilesImage.SubImage(sub).(*ebiten.Image), op)
-			if g.field[y][x].hasDecoration {
-				sub = image.Rect(
-					16*g.field[y][x].decorationLookX, 16*g.field[y][x].decorationLookY,
-					16+16*g.field[y][x].decorationLookX, 16+16*g.field[y][x].decorationLookY,
-				)
-				screen.DrawImage(tilesImage.SubImage(sub).(*ebiten.Image), op)
-			}
+			sub = image.Rect(
+				16*g.field[y][x].decoration.lookX, 16*g.field[y][x].decoration.lookY,
+				16+16*g.field[y][x].decoration.lookX, 16+16*g.field[y][x].decoration.lookY,
+			)
+			screen.DrawImage(tilesImage.SubImage(sub).(*ebiten.Image), op)
 		}
 	}
 

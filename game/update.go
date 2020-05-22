@@ -117,6 +117,11 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		}
 		currentCharacter.strikeCurrentFrame++
 		if currentCharacter.strikeCurrentFrame >= currentCharacter.strikeNumFrames {
+			if currentCharacter.facing == right {
+				g.strikeEffectOnField(currentCharacter.x, currentCharacter.y, 1)
+			} else {
+				g.strikeEffectOnField(currentCharacter.x, currentCharacter.y, -1)
+			}
 			currentCharacter.state = idle
 			g.state = nextState
 		}
