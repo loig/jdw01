@@ -66,8 +66,8 @@ func (g *Game) Init() (err error) {
 	}
 
 	// Set screen size
-	g.screenWidth = 500
-	g.screenHeight = 250
+	g.screenWidth = 1000
+	g.screenHeight = 500
 
 	// Setup animations
 	g.initAnimation()

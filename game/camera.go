@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/hajimehoshi/ebiten"
@@ -57,7 +56,6 @@ func (g *Game) visibleRectangle() (xmin, ymin, xmax, ymax int) {
 	ymin = int(math.Round((g.camera.y-float64(g.screenHeight)/2)/32)) - 1
 	xmax = int(math.Round((g.camera.x+float64(g.screenWidth)/2)/32)) + 1
 	ymax = int(math.Round((g.camera.y+float64(g.screenHeight)/2)/32)) + 1
-	fmt.Println(xmin, ymin, xmax, ymax)
 	if xmin < 0 {
 		xmin = 0
 	}
