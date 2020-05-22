@@ -28,6 +28,7 @@ var blueCharacterImage *ebiten.Image
 var whiteCharacterImage *ebiten.Image
 var pinkCharacterImage *ebiten.Image
 var tilesImage *ebiten.Image
+var dayBackgroundImage *ebiten.Image
 
 func loadAssets() (err error) {
 
@@ -47,6 +48,11 @@ func loadAssets() (err error) {
 	}
 
 	tilesImage, _, err = ebitenutil.NewImageFromFile("assets/tiles.png", ebiten.FilterDefault)
+	if err != nil {
+		return err
+	}
+
+	dayBackgroundImage, _, err = ebitenutil.NewImageFromFile("assets/daybackground.png", ebiten.FilterDefault)
 	if err != nil {
 		return err
 	}

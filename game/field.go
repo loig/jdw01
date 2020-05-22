@@ -229,20 +229,20 @@ var (
 
 func (g *Game) setInitialField() {
 	field := [][]fieldTile{
-		[]fieldTile{nothingTile, nothingTile, nothingTile, wallTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{floorTile, floorTile, floorladerTile, floorTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{nothingTile, nothingTile, floorladerTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{nothingTile, floorTile, floorTile, floorTile, floorTile, floorladerTile, nothingTile},
-		[]fieldTile{nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile},
-		[]fieldTile{nothingTile, traversableWallTile, nothingTile, nothingTile, nothingTile, laderTile, wallTile},
-		[]fieldTile{floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile},
-		[]fieldTile{nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
-		[]fieldTile{backgroundWallTile, backgroundWallTile, backgroundWallTile, backgroundWallTile, backgroundWallTile, backgroundWallTile, backgroundWallTile},
-		[]fieldTile{backgroundWallTile, backgroundWallTile, floorTile, floorTile, underWorldWallTile, backgroundWallTile, floorTile},
-		[]fieldTile{backgroundWallTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile},
-		[]fieldTile{floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile},
+		[]fieldTile{nothingTile, nothingTile, nothingTile, wallTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+		[]fieldTile{floorTile, floorTile, floorladerTile, floorTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+		[]fieldTile{nothingTile, nothingTile, floorladerTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+		[]fieldTile{nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+		[]fieldTile{nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+		[]fieldTile{nothingTile, floorTile, floorTile, floorTile, floorTile, floorladerTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+		[]fieldTile{nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+		[]fieldTile{nothingTile, traversableWallTile, nothingTile, nothingTile, nothingTile, laderTile, wallTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+		[]fieldTile{floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+		[]fieldTile{nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+		[]fieldTile{backgroundWallTile, backgroundWallTile, backgroundWallTile, backgroundWallTile, backgroundWallTile, backgroundWallTile, backgroundWallTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+		[]fieldTile{backgroundWallTile, backgroundWallTile, floorTile, floorTile, underWorldWallTile, backgroundWallTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile},
+		[]fieldTile{backgroundWallTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+		[]fieldTile{floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, floorTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
 	}
 	g.field = field
 }

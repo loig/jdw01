@@ -40,6 +40,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		// get bounds
 		xmin, ymin, xmax, ymax := g.visibleRectangle()
 
+		// Draw the background
+		op = &ebiten.DrawImageOptions{}
+		screen.DrawImage(dayBackgroundImage, op)
+
 		// Draw the field
 		for y := ymin; y < ymax; y++ {
 			for x := xmin; x < xmax; x++ {
@@ -114,7 +118,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		// DEBUG
 		ebitenutil.DrawLine(screen, float64(g.screenWidth)/2, 0, float64(g.screenWidth)/2, float64(g.screenHeight), color.White)
 		ebitenutil.DrawLine(screen, 0, float64(g.screenHeight)/2, float64(g.screenWidth), float64(g.screenHeight)/2, color.White)
-		s := fmt.Sprint("FPS: ", ebiten.CurrentFPS(), "\n", "TPS: ", ebiten.CurrentTPS(), "\n", "Camera:", xmin, ", ", ymin, ", ", xmax, ",", ymax)
+		s := fmt.Sprint("FPS: ", ebiten.CurrentFPS(), "\n", "TPS: ", ebiten.CurrentTPS(), "\n", "Camera: ", xmin, ", ", ymin, ", ", xmax, ",", ymax)
 		ebitenutil.DebugPrint(screen, s)
 	}
 }
