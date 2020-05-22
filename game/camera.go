@@ -17,7 +17,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package game
 
-import "github.com/hajimehoshi/ebiten"
+import (
+	"fmt"
+	"math"
+
+	"github.com/hajimehoshi/ebiten"
+)
 
 type cameraInfo struct {
 	x float64
@@ -45,4 +50,25 @@ func (g *Game) applyCamera(op *ebiten.DrawImageOptions) {
 		-g.camera.x+float64(g.screenWidth)/2-16,
 		-g.camera.y+float64(g.screenHeight)/2-16,
 	)
+}
+
+func (g *Game) visibleRectangle() (xmin, ymin, xmax, ymax int) {
+	xmin = int(math.Round((g.camera.x-float64(g.screenWidth)/2)/32)) - 1
+	ymin = int(math.Round((g.camera.y-float64(g.screenHeight)/2)/32)) - 1
+	xmax = int(math.Round((g.camera.x+float64(g.screenWidth)/2)/32)) + 1
+	ymax = int(math.Round((g.camera.y+float64(g.screenHeight)/2)/32)) + 1
+	fmt.Println(xmin, ymin, xmax, ymax)
+	if xmin < 0 {
+		xmin = 0
+	}
+	if ymin < 0 {
+		ymin = 0
+	}
+	if ymax > len(g.field) {
+		ymax = len(g.field)
+	}
+	if xmax > len(g.field[0]) {
+		xmax = len(g.field[0])
+	}
+	return xmin, ymin, xmax, ymax
 }
