@@ -25,8 +25,8 @@ import (
 )
 
 const (
-	minTilesPerUnderworldEntryPoint = 12
-	minEntryPoints                  = 5
+	minTilesPerUnderworldEntryPoint = 10
+	minEntryPoints                  = 6
 )
 
 // GenerateField generates a field and returns it
@@ -140,8 +140,8 @@ func generateUnderworld(field [][]FieldTile, floorLevel, width, height int) {
 
 	// 3. Build a cave between each pair of entry points
 	caveBuilt := make([]bool, len(entryPointsRegister))
-	maxDepth := make([]int, len(entryPointsRegister))
-	for i := 0; i < len(entryPointsRegister); i++ {
+	maxDepth := make([]int, width)
+	for i := 0; i < width; i++ {
 		maxDepth[i] = height - 2
 	}
 	for i := 0; i < len(entryPointsRegister); i++ {
@@ -160,33 +160,20 @@ func generateUnderworld(field [][]FieldTile, floorLevel, width, height int) {
 			}
 			start := entryPointsRegister[i][0]
 			end := entryPointsRegister[j][len(entryPointsRegister[j])-1]
-			higherPoint := buildCave(field, floorLevel, height, minDepth, maxDepth[i], start, end, firstStart, lastEnd)
-			for k := i + 1; k < j; k++ {
-				maxDepth[k] = higherPoint - 2
-			}
+			buildCave(field, maxDepth, floorLevel, height, minDepth, start, end, firstStart, lastEnd)
 		}
 	}
 
 }
 
-func buildCave(field [][]FieldTile, floorLevel, height, minDepth, maxDepth, start, end, firstStart, lastEnd int) (higherPoint int) {
+func buildCave(field [][]FieldTile, maxDepth []int, floorLevel, height, minDepth, start, end, firstStart, lastEnd int) {
 	currentDepth := floorLevel + 1
 	currentMinDepth := floorLevel + 1
-	currentMaxDepth := maxDepth
-	higherPoint = maxDepth
+	currentMaxDepth := 0
 	for currentx := start + 1; currentx+1 < end; currentx++ {
 		// place current underground
 		field[currentDepth][currentx] = backgroundWallTile
 		field[currentDepth][currentx+1] = backgroundWallTile
-
-		// update higherPoint
-		if firstStart >= 0 {
-			if currentx >= firstStart-1 && currentx+1 <= lastEnd {
-				if currentDepth < higherPoint {
-					higherPoint = currentDepth
-				}
-			}
-		}
 
 		// update currentMinDepth
 		if firstStart >= 0 {
@@ -206,8 +193,19 @@ func buildCave(field [][]FieldTile, floorLevel, height, minDepth, maxDepth, star
 
 		// update currentMaxDepth
 		currentMaxDepth = end - currentx + floorLevel - 2
-		if currentMaxDepth > maxDepth {
-			currentMaxDepth = maxDepth
+		if currentMaxDepth > maxDepth[currentx+1] {
+			currentMaxDepth = maxDepth[currentx+1]
+		}
+		if len(maxDepth) > currentx+2 && currentMaxDepth > maxDepth[currentx+2] {
+			currentMaxDepth = maxDepth[currentx+2]
+		}
+
+		// update maxDepth
+		if maxDepth[currentx] > currentDepth-2 {
+			maxDepth[currentx] = currentDepth - 2
+		}
+		if maxDepth[currentx+1] > currentDepth-2 {
+			maxDepth[currentx+1] = currentDepth - 2
 		}
 
 		// if no choice go up
@@ -241,5 +239,4 @@ func buildCave(field [][]FieldTile, floorLevel, height, minDepth, maxDepth, star
 
 	}
 
-	return higherPoint
 }
