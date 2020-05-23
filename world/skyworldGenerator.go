@@ -143,9 +143,7 @@ func generateSkyworld(field [][]FieldTile, floorLevel, width, height int) {
 
 	// 4. Draw the islands
 	for i := 0; i < numIsland; i++ {
-		for x := islands[i].xstart; x <= islands[i].xend; x++ {
-			field[islands[i].altitude][x] = floorLevelfloorTile
-		}
+		drawIsland(field, islands[i])
 	}
 
 	// 5. Add the laders
@@ -170,14 +168,14 @@ func generateSkyworld(field [][]FieldTile, floorLevel, width, height int) {
 		length := islands[i].xend - islands[i].xstart + 1
 		for j := i + 1; j < numIsland && (!foundLeft || !foundRight); j++ {
 			if !foundLeft &&
-				islands[j].xend > islands[i].xstart &&
-				islands[j].xstart < islands[i].xend-length/2 {
+				islands[j].xend >= islands[i].xstart &&
+				islands[j].xstart <= islands[i].xend-length/2 {
 				foundLeft = true
 				justBelowLeft[i] = j
 			}
 			if !foundRight &&
-				islands[j].xstart < islands[i].xend &&
-				islands[j].xend > islands[i].xend-length/2 {
+				islands[j].xstart <= islands[i].xend &&
+				islands[j].xend >= islands[i].xend-length/2+1 {
 				foundRight = true
 				justBelowRight[i] = j
 			}
@@ -192,9 +190,9 @@ func generateSkyworld(field [][]FieldTile, floorLevel, width, height int) {
 	fmt.Println(justBelowLeft)
 	fmt.Println(justBelowRight)
 	// add laders belowLeft and belowRight of each island (if possible)
-	laders := make([][]int, numIsland)
+	laders := make([][]bool, numIsland)
 	for i := 0; i < numIsland; i++ {
-		laders[i] = make([]int, 0)
+		laders[i] = make([]bool, width)
 	}
 	for i := numIsland - 1; i >= 0; i-- {
 		doLeft := true
@@ -212,11 +210,12 @@ func generateSkyworld(field [][]FieldTile, floorLevel, width, height int) {
 		if doLeft {
 			j := justBelowLeft[i]
 			var islandDown island
-			var ladersDown []int
+			var ladersDown []bool
 			if j == -1 {
 				islandDown.xstart = 0
 				islandDown.xend = width - 1
 				islandDown.altitude = floorLevel
+				ladersDown = make([]bool, width)
 			} else {
 				islandDown = islands[j]
 				ladersDown = laders[j]
@@ -224,18 +223,21 @@ func generateSkyworld(field [][]FieldTile, floorLevel, width, height int) {
 			islandUp := islands[i]
 			islandWidth := islandUp.xend - islandUp.xstart + 1
 			islandUp.xend = islandUp.xend - islandWidth/2
-			position := setLaderPosition(laders[i], ladersDown, islandUp, islandDown)
-			drawLader(field, position, islands[i].altitude, islandDown.altitude)
+			position, okPosition := setLaderPosition(laders[i], ladersDown, islandUp, islandDown)
+			if okPosition {
+				drawLader(field, position, islands[i].altitude, islandDown.altitude)
+			}
 		}
 		// rightLader
 		if doRight {
 			j := justBelowRight[i]
 			var islandDown island
-			var ladersDown []int
+			var ladersDown []bool
 			if j == -1 {
 				islandDown.xstart = 0
 				islandDown.xend = width - 1
 				islandDown.altitude = floorLevel
+				ladersDown = make([]bool, width)
 			} else {
 				islandDown = islands[j]
 				ladersDown = laders[j]
@@ -243,13 +245,15 @@ func generateSkyworld(field [][]FieldTile, floorLevel, width, height int) {
 			islandUp := islands[i]
 			islandWidth := islandUp.xend - islandUp.xstart + 1
 			islandUp.xstart = islandUp.xstart + islandWidth/2
-			position := setLaderPosition(laders[i], ladersDown, islandUp, islandDown)
-			drawLader(field, position, islands[i].altitude, islandDown.altitude)
+			position, okPosition := setLaderPosition(laders[i], ladersDown, islandUp, islandDown)
+			if okPosition {
+				drawLader(field, position, islands[i].altitude, islandDown.altitude)
+			}
 		}
 	}
 }
 
-func setLaderPosition(ladersUp, ladersDown []int, islandUp, islandDown island) int {
+func setLaderPosition(ladersUp, ladersDown []bool, islandUp, islandDown island) (position int, okPosition bool) {
 	minPosition := islandUp.xstart
 	if islandDown.xstart > minPosition {
 		minPosition = islandDown.xstart
@@ -259,12 +263,50 @@ func setLaderPosition(ladersUp, ladersDown []int, islandUp, islandDown island) i
 		maxPosition = islandDown.xend
 	}
 	positionRange := maxPosition - minPosition + 1
-	return minPosition + rand.Intn(positionRange)
+	if positionRange <= 0 { // should never occur, but not sufficiently tested
+		return 0, false
+	}
+	position = minPosition + rand.Intn(positionRange)
+	tmpPosition := position
+	okPosition = !ladersUp[position] && !ladersDown[position]
+	for tmpPosition < maxPosition && !okPosition {
+		tmpPosition++
+		okPosition = !ladersUp[tmpPosition] && !ladersDown[tmpPosition]
+	}
+	if !okPosition {
+		tmpPosition = minPosition
+	}
+	for tmpPosition < position && !okPosition {
+		okPosition = !ladersUp[tmpPosition] && !ladersDown[tmpPosition]
+		tmpPosition++
+	}
+	position = tmpPosition
+	if okPosition {
+		ladersUp[position] = true
+		ladersDown[position] = true
+	}
+	return position, okPosition
+}
+
+func drawIsland(field [][]FieldTile, isl island) {
+	field[isl.altitude][isl.xstart] = leftIslandTile
+	field[isl.altitude][isl.xend] = rightIslandTile
+	for x := isl.xstart + 1; x < isl.xend; x++ {
+		field[isl.altitude][x] = islandTile
+	}
 }
 
 // ystart is the highest altitude
 func drawLader(field [][]FieldTile, x, ystart, yend int) {
 	for y := ystart; y < yend; y++ {
-		field[y][x] = laderTile
+		if field[y][x] == islandTile {
+			field[y][x] = islandLaderTile
+		} else if field[y][x] == leftIslandTile {
+			field[y][x] = islandLaderTile
+		} else if field[y][x] == rightIslandTile {
+			field[y][x] = islandLaderTile
+		} else {
+			field[y][x] = laderTile
+		}
 	}
 }

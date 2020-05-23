@@ -33,7 +33,7 @@ func main() {
 	}
 
 	// initialize window
-	ebiten.SetWindowSize(1000, 1000)
+	ebiten.SetWindowSize(1024, 512)
 	ebiten.SetWindowTitle("BWP")
 
 	// run the game

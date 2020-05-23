@@ -25,6 +25,8 @@ var (
 	floorType           = FieldType{floor, 3, 0}
 	laderType           = FieldType{lader, 8, 4}
 	grassType           = FieldType{floor, 1, 1}
+	leftGrassType       = FieldType{floor, 0, 1}
+	rightGrassType      = FieldType{floor, 3, 1}
 )
 
 var (
@@ -37,5 +39,8 @@ var (
 	floorTile                     = FieldTile{floorType, nothingType, nothingType}
 	floorLevelfloorTile           = FieldTile{floorType, grassType, nothingType}
 	laderTile                     = FieldTile{laderType, nothingType, nothingType}
-	floorladerTile                = FieldTile{floorType, laderType, nothingType}
+	islandTile                    = FieldTile{floorType, grassType, nothingType}
+	islandLaderTile               = FieldTile{floorType, laderType, nothingType}
+	leftIslandTile                = FieldTile{floorType, leftGrassType, nothingType}
+	rightIslandTile               = FieldTile{floorType, rightGrassType, nothingType}
 )
