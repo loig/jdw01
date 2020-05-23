@@ -18,18 +18,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package world
 
 import (
-	"fmt"
 	"math/rand"
 )
 
-func generateBlueWalls(field [][]FieldTile, floorLevel, width, height int, pinkStart, whiteStart, goal coordinates) {
-
-	fmt.Println("Blue walls")
+func generateBlueWalls(field [][]FieldTile, floorLevel, width, height int, blueStart, pinkStart, whiteStart, goal coordinates) {
 
 	numBlueWalls := minBlueWalls + rand.Intn(maxBlueWalls-minBlueWalls+1)
 	lastPos := 0
 	for i := 0; i < numBlueWalls; i++ {
-		fmt.Println("Blue wall", i)
 		inBetween := minSpaceBetweenBlueWalls + rand.Intn(maxSpaceBetweenBlueWalls-minSpaceBetweenBlueWalls+1)
 		currentPos := lastPos + inBetween
 		if currentPos >= width {
@@ -39,13 +35,13 @@ func generateBlueWalls(field [][]FieldTile, floorLevel, width, height int, pinkS
 		placed := false
 		for !placed {
 			high := floorLevel - 1
-			if isValidForBlueWalls(field, currentPos, high, pinkStart, whiteStart, goal) {
+			if isValidForBlueWalls(field, currentPos, high, blueStart, pinkStart, whiteStart, goal) {
 				field[high][currentPos] = traversableWallTile
 				lastPos = currentPos
 				placed = true
 				high--
 				if rand.Intn(3) == 0 {
-					if isValidForBlueWalls(field, currentPos, high, pinkStart, whiteStart, goal) {
+					if isValidForBlueWalls(field, currentPos, high, blueStart, pinkStart, whiteStart, goal) {
 						field[high][currentPos] = traversableWallTile
 					}
 				}
@@ -65,8 +61,11 @@ func generateBlueWalls(field [][]FieldTile, floorLevel, width, height int, pinkS
 
 }
 
-func isValidForBlueWalls(field [][]FieldTile, x, y int, pinkStart, whiteStart, goal coordinates) bool {
+func isValidForBlueWalls(field [][]FieldTile, x, y int, blueStart, pinkStart, whiteStart, goal coordinates) bool {
 	if !IsBackgroundField(field[y][x]) {
+		return false
+	}
+	if x == blueStart.x && y == blueStart.y {
 		return false
 	}
 	if x == pinkStart.x && y == pinkStart.y {

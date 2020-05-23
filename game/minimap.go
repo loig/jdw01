@@ -30,11 +30,11 @@ var miniMapOverlay *ebiten.Image
 
 func (g *Game) initMiniMap() (err error) {
 
-	miniMap, err = ebiten.NewImage(len(g.field)*16+32, len(g.field[0])*16+32, ebiten.FilterDefault)
+	miniMap, err = ebiten.NewImage(len(g.field[0])*16+32, len(g.field)*16+32, ebiten.FilterDefault)
 	if err != nil {
 		return err
 	}
-	miniMapOverlay, err = ebiten.NewImage(len(g.field)*16+32, len(g.field[0])*16+32, ebiten.FilterDefault)
+	miniMapOverlay, err = ebiten.NewImage(len(g.field[0])*16+32, len(g.field)*16+32, ebiten.FilterDefault)
 	if err != nil {
 		return err
 	}

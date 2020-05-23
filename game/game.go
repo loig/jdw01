@@ -77,12 +77,14 @@ func (g *Game) Init() (err error) {
 	g.initAnimation()
 
 	// World size
-	fieldWidth := 100
+	fieldWidth := 200
 	fieldHeight := 100
 
 	// Set field
-	var floorLevel float64
-	g.field, floorLevel = world.GenerateField(fieldWidth, fieldHeight)
+	var (
+		blueX, blueY, pinkX, pinkY, whiteX, whiteY float64
+	)
+	g.field, blueX, blueY, pinkX, pinkY, whiteX, whiteY = world.GenerateField(fieldWidth, fieldHeight)
 
 	// Initialize minimap
 	if err = g.initMiniMap(); err != nil {
@@ -90,18 +92,19 @@ func (g *Game) Init() (err error) {
 	}
 
 	// Initial positions of characters
-	g.blueCharacter.x = 5
-	g.blueCharacter.y = floorLevel
+	g.blueCharacter.x = blueX
+	g.blueCharacter.y = blueY
 	g.blueCharacter.state = idle
 	g.blueCharacter.speed = 0.11
 
-	g.whiteCharacter.x = g.blueCharacter.x + 2
-	g.whiteCharacter.y = floorLevel
+	g.whiteCharacter.x = whiteX
+	g.whiteCharacter.y = whiteY
 	g.whiteCharacter.state = idle
 	g.whiteCharacter.speed = 0.09
+	g.whiteCharacter.facing = left
 
-	g.pinkCharacter.x = g.blueCharacter.x - 3
-	g.pinkCharacter.y = floorLevel
+	g.pinkCharacter.x = pinkX
+	g.pinkCharacter.y = pinkY
 	g.pinkCharacter.state = idle
 	g.pinkCharacter.speed = 0.13
 

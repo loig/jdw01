@@ -33,10 +33,12 @@ const (
 	maxBlueWalls             = 20
 	minSpaceBetweenBlueWalls = 15
 	maxSpaceBetweenBlueWalls = 30
+	chanceToDig              = 8
+	chanceToGrow             = 25
 )
 
 // GenerateField generates a field and returns it
-func GenerateField(width, height int) (field [][]FieldTile, floorLevel float64) {
+func GenerateField(width, height int) (field [][]FieldTile, blueX, blueY, pinkX, pinkY, whiteX, whiteY float64) {
 	// seeding the random generator
 	rand.Seed(time.Now().UTC().UnixNano())
 
@@ -68,19 +70,19 @@ func GenerateField(width, height int) (field [][]FieldTile, floorLevel float64) 
 		field[tmpFloorLevel-1][1] = traversableWallTile
 		field[tmpFloorLevel-1][0] = destroyableWallTile
 	*/
-	pinkStart := coordinates{0, tmpFloorLevel - 1}
-	whiteStart := coordinates{0, tmpFloorLevel - 1}
+	blueStart := coordinates{6, tmpFloorLevel - 1}
+	pinkStart := coordinates{3, tmpFloorLevel - 1}
+	whiteStart := coordinates{8, tmpFloorLevel - 1}
 	goal := coordinates{width - 1, tmpFloorLevel - 1}
 
 	generateUnderworld(field, tmpFloorLevel, width, height)
+	improveUnderworld(field, tmpFloorLevel, width, height)
 	generateSkyworld(field, tmpFloorLevel, width, height)
-	generateBlueWalls(field, tmpFloorLevel, width, height, pinkStart, whiteStart, goal)
-
-	paths := reachableByPink(field, pinkStart)
-	displayPaths(field, paths)
+	improveFlyworld(field, tmpFloorLevel, width, height)
+	generateBlueWalls(field, tmpFloorLevel, width, height, blueStart, pinkStart, whiteStart, goal)
 
 	// If things are added outside of the playing field, it must be
 	// done after this point (i.e. things added to the left/right of the field)
 
-	return field, float64(tmpFloorLevel - 1)
+	return field, float64(blueStart.x), float64(blueStart.y), float64(pinkStart.x), float64(pinkStart.y), float64(whiteStart.x), float64(whiteStart.y)
 }
