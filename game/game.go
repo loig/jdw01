@@ -83,21 +83,26 @@ func (g *Game) Init() (err error) {
 	var floorLevel float64
 	g.field, floorLevel = world.GenerateField(fieldWidth, fieldHeight)
 
+	// Initialize minimap
+	if err = g.initMiniMap(); err != nil {
+		return err
+	}
+
 	// Initial positions of characters
 	g.blueCharacter.x = 5
 	g.blueCharacter.y = floorLevel
 	g.blueCharacter.state = idle
-	g.blueCharacter.speed = 0.1
+	g.blueCharacter.speed = 0.11
 
 	g.whiteCharacter.x = g.blueCharacter.x + 2
 	g.whiteCharacter.y = floorLevel
 	g.whiteCharacter.state = idle
-	g.whiteCharacter.speed = 0.08
+	g.whiteCharacter.speed = 0.09
 
 	g.pinkCharacter.x = g.blueCharacter.x - 3
 	g.pinkCharacter.y = floorLevel
 	g.pinkCharacter.state = idle
-	g.pinkCharacter.speed = 0.12
+	g.pinkCharacter.speed = 0.13
 
 	// Set camera
 	g.setCameraPosition()

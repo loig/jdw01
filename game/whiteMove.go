@@ -22,10 +22,10 @@ import "math"
 func (g *Game) tryWhiteSpecialMoveUp() {
 	switch g.getLaderFieldMove(g.whiteCharacter.x, g.whiteCharacter.y, -g.whiteCharacter.speed/2) {
 	case normalFieldMove:
-		g.whiteCharacter.y -= g.whiteCharacter.speed / 2
+		g.whiteCharacter.y -= g.whiteCharacter.speed * 0.8
 		g.state = whiteSpecialMove
 	case endOfLaderFieldMove:
-		g.whiteCharacter.y -= g.whiteCharacter.speed / 2
+		g.whiteCharacter.y -= g.whiteCharacter.speed * 0.8
 		g.whiteCharacter.y = math.Round(g.whiteCharacter.y)
 		g.state = playingWhite
 	case noFieldMove:
@@ -36,10 +36,10 @@ func (g *Game) tryWhiteSpecialMoveUp() {
 func (g *Game) tryWhiteSpecialMoveDown() {
 	switch g.getLaderFieldMove(g.whiteCharacter.x, g.whiteCharacter.y, +g.whiteCharacter.speed/2) {
 	case normalFieldMove:
-		g.whiteCharacter.y += g.whiteCharacter.speed / 2
+		g.whiteCharacter.y += g.whiteCharacter.speed * 0.8
 		g.state = whiteSpecialMove
 	case endOfLaderFieldMove:
-		g.whiteCharacter.y += g.whiteCharacter.speed / 2
+		g.whiteCharacter.y += g.whiteCharacter.speed * 0.8
 		g.whiteCharacter.y = math.Round(g.whiteCharacter.y)
 		g.state = playingWhite
 	case noFieldMove:

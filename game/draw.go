@@ -115,6 +115,13 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		)
 		screen.DrawImage(pinkCharacterImage.SubImage(sub).(*ebiten.Image), op)
 
+		// Draw the minimap
+		op = &ebiten.DrawImageOptions{}
+		op.GeoM.Scale(0.125, 0.125)
+		op.GeoM.Translate(5, float64(g.screenHeight)-5-(float64(len(g.field))*16+32)*0.125)
+		screen.DrawImage(miniMap, op)
+		screen.DrawImage(miniMapOverlay, op)
+
 		// DEBUG
 		ebitenutil.DrawLine(screen, float64(g.screenWidth)/2, 0, float64(g.screenWidth)/2, float64(g.screenHeight), color.White)
 		ebitenutil.DrawLine(screen, 0, float64(g.screenHeight)/2, float64(g.screenWidth), float64(g.screenHeight)/2, color.White)
