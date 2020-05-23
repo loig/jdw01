@@ -28,7 +28,7 @@ const (
 	minIslands     = 10
 	maxIslands     = 20
 	minSizeIsland  = 8
-	maxSizeIsland  = 15
+	maxSizeIsland  = 25
 )
 
 // GenerateField generates a field and returns it
@@ -36,7 +36,7 @@ func GenerateField(width, height int) (field [][]FieldTile, floorLevel float64) 
 	// seeding the random generator
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	tmpFloorLevel := height * 2 / 3
+	tmpFloorLevel := height * 3 / 4
 	field = make([][]FieldTile, height)
 	for y := 0; y < height; y++ {
 		field[y] = make([]FieldTile, width)
@@ -56,12 +56,14 @@ func GenerateField(width, height int) (field [][]FieldTile, floorLevel float64) 
 		}
 	}
 	// for testing
-	field[tmpFloorLevel-1][25] = traversableWallTile
-	field[tmpFloorLevel-2][25] = traversableWallTile
-	field[tmpFloorLevel-1][29] = traversableWallTile
-	field[tmpFloorLevel-1][30] = destroyableWallTile
-	field[tmpFloorLevel-1][1] = traversableWallTile
-	field[tmpFloorLevel-1][0] = destroyableWallTile
+	/*
+		field[tmpFloorLevel-1][25] = traversableWallTile
+		field[tmpFloorLevel-2][25] = traversableWallTile
+		field[tmpFloorLevel-1][29] = traversableWallTile
+		field[tmpFloorLevel-1][30] = destroyableWallTile
+		field[tmpFloorLevel-1][1] = traversableWallTile
+		field[tmpFloorLevel-1][0] = destroyableWallTile
+	*/
 	generateUnderworld(field, tmpFloorLevel, width, height)
 	generateSkyworld(field, tmpFloorLevel, width, height)
 	return field, float64(tmpFloorLevel - 1)

@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package world
 
 import (
-	"fmt"
 	"math/rand"
 
 	"github.com/loig/jdw01/util"
@@ -204,7 +203,6 @@ func buildCave(field [][]FieldTile, maxDepth []int, floorLevel, width, height, m
 
 	// Case with only one entry point
 	if start+1 == end {
-		fmt.Println("plop")
 		// go left or right
 		direction := rand.Intn(2)
 		if direction == 0 {
@@ -246,7 +244,6 @@ func buildCave(field [][]FieldTile, maxDepth []int, floorLevel, width, height, m
 				currentMaxDepth > maxDepth[currentx-direction] {
 				currentMaxDepth = maxDepth[currentx-direction]
 			}
-			fmt.Println(currentMaxDepth, direction, currentx)
 
 			// update maxDepth
 			if updatedMaxDepth[currentx] > currentDepth-2 {

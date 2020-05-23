@@ -69,23 +69,23 @@ func (g *Game) Init() (err error) {
 	}
 
 	// Set screen size
-	g.screenWidth = 1000
-	g.screenHeight = 500
+	g.screenWidth = 3200
+	g.screenHeight = 3200
 
 	// Setup animations
 	g.initAnimation()
 
 	// World size
 	fieldWidth := 100
-	fieldHeight := 40
+	fieldHeight := 100
 
 	// Set field
 	var floorLevel float64
 	g.field, floorLevel = world.GenerateField(fieldWidth, fieldHeight)
 
 	// Initial positions of characters
-	g.blueCharacter.x = 10
-	g.blueCharacter.y = floorLevel
+	g.blueCharacter.x = 50
+	g.blueCharacter.y = 50
 	g.blueCharacter.state = idle
 	g.blueCharacter.speed = 0.1
 
