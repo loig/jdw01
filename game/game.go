@@ -50,6 +50,7 @@ const (
 	whiteStrike
 	playingPink
 	pinkSpecialMoveDirectDown
+	pinkSpecialMoveDirectUp
 	pinkSpecialMoveDown
 	pinkSpecialMoveUp
 	pinkStrike

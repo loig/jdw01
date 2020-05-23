@@ -80,6 +80,16 @@ func reachableByPink(field [][]FieldTile, startingPoint coordinates) [][]bool {
 				}
 			}
 		}
+		// try up
+		if toLook.y-1 >= 0 {
+			if IsBackgroundField(field[toLook.y-1][toLook.x]) &&
+				IsFloorField(field[toLook.y][toLook.x]) {
+				if !reachable[toLook.y-1][toLook.x] {
+					reachable[toLook.y-1][toLook.x] = true
+					nexts = append(nexts, coordinates{toLook.x, toLook.y - 1})
+				}
+			}
+		}
 		// try down
 		if toLook.y+2 < height {
 			if IsBackgroundField(field[toLook.y+1][toLook.x]) &&

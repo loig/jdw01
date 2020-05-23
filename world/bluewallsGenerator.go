@@ -69,6 +69,12 @@ func isValidForBlueWalls(field [][]FieldTile, x, y int, pinkStart, whiteStart, g
 	if !IsBackgroundField(field[y][x]) {
 		return false
 	}
+	if x == pinkStart.x && y == pinkStart.y {
+		return false
+	}
+	if x == whiteStart.x && y == whiteStart.y {
+		return false
+	}
 	if y+1 < len(field) && IsBackgroundField(field[y+1][x]) {
 		return false
 	}

@@ -132,6 +132,15 @@ func (g *Game) tryUpMove(currentCharacter *character) {
 			currentCharacter.state = specialMove
 			currentCharacter.x = math.Round(currentCharacter.x)
 		}
+		return
+	}
+	if g.state == playingPink {
+		if g.fieldOkForPinkSpecialMove(currentCharacter.x, currentCharacter.y, -1) {
+			g.state = pinkSpecialMoveDirectUp
+			currentCharacter.specialMoveCurrentFrame = 0
+			currentCharacter.state = specialMove
+			currentCharacter.x = math.Round(currentCharacter.x)
+		}
 	}
 }
 
@@ -146,7 +155,7 @@ func (g *Game) tryDownMove(currentCharacter *character) {
 		return
 	}
 	if g.state == playingPink {
-		if g.fieldOkForPinkSpecialMove(currentCharacter.x, currentCharacter.y) {
+		if g.fieldOkForPinkSpecialMove(currentCharacter.x, currentCharacter.y, 1) {
 			g.state = pinkSpecialMoveDirectDown
 			currentCharacter.specialMoveCurrentFrame = 0
 			currentCharacter.state = specialMove

@@ -47,6 +47,29 @@ func (g *Game) performPinkSpecialMoveDirectDown() {
 	}
 }
 
+func (g *Game) performPinkSpecialMoveDirectUp() {
+	g.pinkCharacter.specialMoveCurrentFrame++
+	// vertical move
+	firstSplit := g.pinkCharacter.specialMoveNumFrames / 3
+	secondSplit := g.pinkCharacter.specialMoveNumFrames - firstSplit
+	if g.pinkCharacter.specialMoveCurrentFrame <= firstSplit {
+		t := float64(g.pinkCharacter.specialMoveCurrentFrame) / float64(firstSplit)
+		tprev := float64(g.pinkCharacter.specialMoveCurrentFrame-1) / float64(firstSplit)
+		frameVerticalMove := util.SmoothStop3(t) - util.SmoothStop3(tprev)
+		g.pinkCharacter.y -= 1.25 * frameVerticalMove
+	} else {
+		t := float64(g.pinkCharacter.specialMoveCurrentFrame-firstSplit) / float64(secondSplit)
+		tprev := float64(g.pinkCharacter.specialMoveCurrentFrame-1-firstSplit) / float64(secondSplit)
+		frameVerticalMove := util.SmoothStart3(t) - util.SmoothStart3(tprev)
+		g.pinkCharacter.y += 0.25 * frameVerticalMove
+	}
+	if g.pinkCharacter.specialMoveCurrentFrame >= g.pinkCharacter.specialMoveNumFrames {
+		g.state = playingPink
+		g.pinkCharacter.state = idle
+		g.pinkCharacter.y = math.Round(g.pinkCharacter.y)
+	}
+}
+
 func (g *Game) performPinkSpecialMoveDown() {
 	g.pinkCharacter.specialMoveCurrentFrame++
 	// horizontal move

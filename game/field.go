@@ -102,12 +102,22 @@ func (g *Game) getFieldMove(xinit, yinit, offset float64) fieldMove {
 	return normalFieldMove
 }
 
-func (g *Game) fieldOkForPinkSpecialMove(x, y float64) bool {
+func (g *Game) fieldOkForPinkSpecialMove(x, y float64, direction int) bool {
 	intx := int(math.Round(x))
 	inty := int(math.Round(y))
-	return len(g.field) > inty+2 &&
-		world.IsBackgroundField(g.field[inty+1][intx]) &&
-		world.IsFloorField(g.field[inty+2][intx])
+	switch {
+	case direction < 0:
+		//go up
+		return inty > 0 &&
+			world.IsBackgroundField(g.field[inty-1][intx]) &&
+			world.IsFloorField(g.field[inty][intx])
+	case direction > 0:
+		//go down
+		return len(g.field) > inty+2 &&
+			world.IsBackgroundField(g.field[inty+1][intx]) &&
+			world.IsFloorField(g.field[inty+2][intx])
+	}
+	return false
 }
 
 func (g *Game) fieldOkForWhiteSpecialMove(x, y float64, direction int) bool {

@@ -84,6 +84,9 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	case pinkSpecialMoveDirectDown:
 		g.performPinkSpecialMoveDirectDown()
 
+	case pinkSpecialMoveDirectUp:
+		g.performPinkSpecialMoveDirectUp()
+
 	case pinkSpecialMoveDown:
 		g.performPinkSpecialMoveDown()
 

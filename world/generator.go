@@ -76,6 +76,9 @@ func GenerateField(width, height int) (field [][]FieldTile, floorLevel float64) 
 	generateSkyworld(field, tmpFloorLevel, width, height)
 	generateBlueWalls(field, tmpFloorLevel, width, height, pinkStart, whiteStart, goal)
 
+	paths := reachableByPink(field, pinkStart)
+	displayPaths(field, paths)
+
 	// If things are added outside of the playing field, it must be
 	// done after this point (i.e. things added to the left/right of the field)
 
