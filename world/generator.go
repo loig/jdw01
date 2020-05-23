@@ -23,12 +23,16 @@ import (
 )
 
 const (
-	minEntryPoints = 10
-	maxEntryPoints = 15
-	minIslands     = 10
-	maxIslands     = 20
-	minSizeIsland  = 8
-	maxSizeIsland  = 25
+	minEntryPoints           = 10
+	maxEntryPoints           = 15
+	minIslands               = 10
+	maxIslands               = 20
+	minSizeIsland            = 8
+	maxSizeIsland            = 25
+	minBlueWalls             = 10
+	maxBlueWalls             = 20
+	minSpaceBetweenBlueWalls = 15
+	maxSpaceBetweenBlueWalls = 30
 )
 
 // GenerateField generates a field and returns it
@@ -64,17 +68,13 @@ func GenerateField(width, height int) (field [][]FieldTile, floorLevel float64) 
 		field[tmpFloorLevel-1][1] = traversableWallTile
 		field[tmpFloorLevel-1][0] = destroyableWallTile
 	*/
+	pinkStart := coordinates{0, tmpFloorLevel - 1}
+	whiteStart := coordinates{0, tmpFloorLevel - 1}
+	goal := coordinates{width - 1, tmpFloorLevel - 1}
+
 	generateUnderworld(field, tmpFloorLevel, width, height)
 	generateSkyworld(field, tmpFloorLevel, width, height)
-
-	field[tmpFloorLevel-1][5] = traversableWallTile
-	field[tmpFloorLevel-1][29] = traversableWallTile
-	field[tmpFloorLevel-1][35] = traversableWallTile
-	field[tmpFloorLevel-2][35] = traversableWallTile
-
-	paths := reachableByPink(field, coordinates{10, tmpFloorLevel - 1})
-	paths = reachableByWhite(field, coordinates{10, tmpFloorLevel - 1})
-	displayPaths(field, paths)
+	generateBlueWalls(field, tmpFloorLevel, width, height, pinkStart, whiteStart, goal)
 
 	// If things are added outside of the playing field, it must be
 	// done after this point (i.e. things added to the left/right of the field)
