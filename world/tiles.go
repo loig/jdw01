@@ -27,20 +27,21 @@ var (
 	grassType           = FieldType{floor, 1, 1}
 	leftGrassType       = FieldType{floor, 0, 1}
 	rightGrassType      = FieldType{floor, 3, 1}
+	reachableType       = FieldType{nothing, 5, 3}
 )
 
 var (
-	nothingTile                   = FieldTile{nothingType, nothingType, nothingType}
-	destroyableWallTile           = FieldTile{destroyableWallType, nothingType, nothingType}
-	underworldDestroyableWallTile = FieldTile{destroyableWallType, nothingType, backgroundWallType}
-	traversableWallTile           = FieldTile{traversableWallType, nothingType, nothingType}
-	backgroundWallTile            = FieldTile{backgroundWallType, nothingType, nothingType}
-	floorLevelBackgroundWallTile  = FieldTile{backgroundWallType, grassType, nothingType}
-	floorTile                     = FieldTile{floorType, nothingType, nothingType}
-	floorLevelfloorTile           = FieldTile{floorType, grassType, nothingType}
-	laderTile                     = FieldTile{laderType, nothingType, nothingType}
-	islandTile                    = FieldTile{floorType, grassType, nothingType}
-	islandLaderTile               = FieldTile{floorType, laderType, nothingType}
-	leftIslandTile                = FieldTile{floorType, leftGrassType, nothingType}
-	rightIslandTile               = FieldTile{floorType, rightGrassType, nothingType}
+	nothingTile                   = FieldTile{nothingType, nothingType, nothingType, nothingType}
+	destroyableWallTile           = FieldTile{destroyableWallType, nothingType, nothingType, nothingType}
+	underworldDestroyableWallTile = FieldTile{destroyableWallType, nothingType, backgroundWallType, nothingType}
+	traversableWallTile           = FieldTile{traversableWallType, nothingType, nothingType, nothingType}
+	backgroundWallTile            = FieldTile{backgroundWallType, nothingType, nothingType, nothingType}
+	floorLevelBackgroundWallTile  = FieldTile{backgroundWallType, grassType, nothingType, nothingType}
+	floorTile                     = FieldTile{floorType, nothingType, nothingType, nothingType}
+	floorLevelfloorTile           = FieldTile{floorType, grassType, nothingType, nothingType}
+	laderTile                     = FieldTile{laderType, nothingType, nothingType, nothingType}
+	islandTile                    = FieldTile{floorType, grassType, nothingType, nothingType}
+	islandLaderTile               = FieldTile{floorType, laderType, nothingType, nothingType}
+	leftIslandTile                = FieldTile{floorType, leftGrassType, nothingType, nothingType}
+	rightIslandTile               = FieldTile{floorType, rightGrassType, nothingType, nothingType}
 )

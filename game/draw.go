@@ -115,6 +115,21 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		)
 		screen.DrawImage(pinkCharacterImage.SubImage(sub).(*ebiten.Image), op)
 
+		// Draw the front layout of the field
+		for y := ymin; y < ymax; y++ {
+			for x := xmin; x < xmax; x++ {
+				op = &ebiten.DrawImageOptions{}
+				op.GeoM.Scale(2, 2)
+				op.GeoM.Translate(float64(x)*32, float64(y)*32)
+				g.applyCamera(op)
+				sub = image.Rect(
+					16*g.field[y][x].Info.LookX, 16*g.field[y][x].Info.LookY,
+					16+16*g.field[y][x].Info.LookX, 16+16*g.field[y][x].Info.LookY,
+				)
+				screen.DrawImage(tilesImage.SubImage(sub).(*ebiten.Image), op)
+			}
+		}
+
 		// Draw the minimap
 		op = &ebiten.DrawImageOptions{}
 		op.GeoM.Scale(0.125, 0.125)

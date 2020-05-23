@@ -66,5 +66,18 @@ func GenerateField(width, height int) (field [][]FieldTile, floorLevel float64) 
 	*/
 	generateUnderworld(field, tmpFloorLevel, width, height)
 	generateSkyworld(field, tmpFloorLevel, width, height)
+
+	field[tmpFloorLevel-1][5] = traversableWallTile
+	field[tmpFloorLevel-1][29] = traversableWallTile
+	field[tmpFloorLevel-1][35] = traversableWallTile
+	field[tmpFloorLevel-2][35] = traversableWallTile
+
+	paths := reachableByPink(field, coordinates{10, tmpFloorLevel - 1})
+	paths = reachableByWhite(field, coordinates{10, tmpFloorLevel - 1})
+	displayPaths(field, paths)
+
+	// If things are added outside of the playing field, it must be
+	// done after this point (i.e. things added to the left/right of the field)
+
 	return field, float64(tmpFloorLevel - 1)
 }

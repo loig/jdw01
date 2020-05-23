@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package world
 
 import (
-	"fmt"
 	"math/rand"
 )
 
@@ -31,7 +30,6 @@ type island struct {
 func generateSkyworld(field [][]FieldTile, floorLevel, width, height int) {
 	// 1. Generate the number of islands
 	numIsland := rand.Intn(maxIslands+1-minIslands) + minIslands
-	fmt.Println("Generating", numIsland, "islands")
 	islands := make([]island, numIsland)
 
 	// 2. Generate the x range of each Island
@@ -71,7 +69,6 @@ func generateSkyworld(field [][]FieldTile, floorLevel, width, height int) {
 		islands[i].xstart = minX
 		islands[i].xend = maxX
 	}
-	fmt.Println("Islands:", islands)
 
 	// 3. Generate the altitude of each island
 	// sort the islands by increasing xstart
@@ -84,7 +81,6 @@ func generateSkyworld(field [][]FieldTile, floorLevel, width, height int) {
 			}
 		}
 	}
-	fmt.Println("Islands:", islands)
 	// list islands that overlap (or could be just close to)
 	// with each island and start before this island
 	numOverlaping := make([]int, numIsland)
@@ -102,7 +98,6 @@ func generateSkyworld(field [][]FieldTile, floorLevel, width, height int) {
 			}
 		}
 	}
-	fmt.Println(overlaping)
 	// determine the number of possible island altitudes
 	maxOverlaping := 0
 	for i := 0; i < numIsland; i++ {
@@ -135,11 +130,9 @@ func generateSkyworld(field [][]FieldTile, floorLevel, width, height int) {
 		}
 		islands[i].altitude = altitudeNum - 1
 	}
-	fmt.Println(islands)
 	for i := 0; i < numIsland; i++ {
 		islands[i].altitude = floorLevel - (islands[i].altitude+1)*5
 	}
-	fmt.Println(islands)
 
 	// 4. Draw the islands
 	for i := 0; i < numIsland; i++ {
@@ -157,7 +150,6 @@ func generateSkyworld(field [][]FieldTile, floorLevel, width, height int) {
 			}
 		}
 	}
-	fmt.Println(islands)
 	// find an island just below the left side of each island
 	// and an island just below the right side of each island
 	justBelowLeft := make([]int, numIsland)
@@ -187,8 +179,6 @@ func generateSkyworld(field [][]FieldTile, floorLevel, width, height int) {
 			justBelowRight[i] = -1
 		}
 	}
-	fmt.Println(justBelowLeft)
-	fmt.Println(justBelowRight)
 	// add laders belowLeft and belowRight of each island (if possible)
 	laders := make([][]bool, numIsland)
 	for i := 0; i < numIsland; i++ {

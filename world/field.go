@@ -22,6 +22,7 @@ type FieldTile struct {
 	Tile       FieldType
 	Decoration FieldType
 	Destructed FieldType
+	Info       FieldType
 }
 
 // FieldType defines the type of a (part of a) tile
