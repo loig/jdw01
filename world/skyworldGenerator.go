@@ -52,6 +52,9 @@ func generateSkyworld(field [][]FieldTile, floorLevel, width, height int) {
 			// else the next island should start somewhere before the last
 			// island end
 			minX = lastMaxX - 4 - rand.Intn(minSizeIsland)
+			if minX < 0 {
+				minX = 1
+			}
 		}
 		// end of current island
 		var maxX int
@@ -67,16 +70,201 @@ func generateSkyworld(field [][]FieldTile, floorLevel, width, height int) {
 		// build island
 		islands[i].xstart = minX
 		islands[i].xend = maxX
-		islands[i].altitude = floorLevel - 2*i - 2
 	}
 	fmt.Println("Islands:", islands)
 
 	// 3. Generate the altitude of each island
+	// sort the islands by increasing xstart
+	for i := numIsland - 1; i >= 1; i-- {
+		for j := 0; j < i; j++ {
+			if islands[j+1].xstart < islands[j].xstart {
+				tmpIsland := islands[j]
+				islands[j] = islands[j+1]
+				islands[j+1] = tmpIsland
+			}
+		}
+	}
+	fmt.Println("Islands:", islands)
+	// list islands that overlap (or could be just close to)
+	// with each island and start before this island
+	numOverlaping := make([]int, numIsland)
+	overlaping := make([][]int, numIsland)
+	for i := 0; i < numIsland; i++ {
+		overlaping[i] = make([]int, 0)
+	}
+	for i := 0; i < numIsland; i++ {
+		for j := i + 1; j < numIsland; j++ {
+			if islands[i].xend+1 >= islands[j].xstart {
+				//overlaping[i] = append(overlaping[i], j)
+				numOverlaping[i]++
+				numOverlaping[j]++
+				overlaping[j] = append(overlaping[j], i)
+			}
+		}
+	}
+	fmt.Println(overlaping)
+	// determine the number of possible island altitudes
+	maxOverlaping := 0
+	for i := 0; i < numIsland; i++ {
+		if numOverlaping[i] > maxOverlaping {
+			maxOverlaping = numOverlaping[i]
+		}
+	}
+	numAltitude := (floorLevel - 4) / 5
+	if maxOverlaping+1 < numAltitude {
+		numAltitude = maxOverlaping + 1
+	}
+	// give an altitude to each island, different from the islands
+	// starting before
+	for i := 0; i < numIsland; i++ {
+		altitudePosition := rand.Intn(numAltitude - len(overlaping[i]))
+		positioned := false
+		count := 0
+		var altitudeNum int
+		for altitudeNum = 0; !positioned; altitudeNum++ {
+			taken := false
+			for _, j := range overlaping[i] {
+				taken = taken || islands[j].altitude == altitudeNum
+			}
+			if !taken {
+				if count == altitudePosition {
+					positioned = true
+				}
+				count++
+			}
+		}
+		islands[i].altitude = altitudeNum - 1
+	}
+	fmt.Println(islands)
+	for i := 0; i < numIsland; i++ {
+		islands[i].altitude = floorLevel - (islands[i].altitude+1)*5
+	}
+	fmt.Println(islands)
 
-	// Draw the islands
+	// 4. Draw the islands
 	for i := 0; i < numIsland; i++ {
 		for x := islands[i].xstart; x <= islands[i].xend; x++ {
 			field[islands[i].altitude][x] = floorLevelfloorTile
 		}
+	}
+
+	// 5. Add the laders
+	// sort by altitude
+	for i := numIsland - 1; i >= 1; i-- {
+		for j := 0; j < i; j++ {
+			if islands[j+1].altitude < islands[j].altitude {
+				tmpIsland := islands[j]
+				islands[j] = islands[j+1]
+				islands[j+1] = tmpIsland
+			}
+		}
+	}
+	fmt.Println(islands)
+	// find an island just below the left side of each island
+	// and an island just below the right side of each island
+	justBelowLeft := make([]int, numIsland)
+	justBelowRight := make([]int, numIsland)
+	for i := 0; i < numIsland; i++ {
+		foundLeft := false
+		foundRight := false
+		length := islands[i].xend - islands[i].xstart + 1
+		for j := i + 1; j < numIsland && (!foundLeft || !foundRight); j++ {
+			if !foundLeft &&
+				islands[j].xend > islands[i].xstart &&
+				islands[j].xstart < islands[i].xend-length/2 {
+				foundLeft = true
+				justBelowLeft[i] = j
+			}
+			if !foundRight &&
+				islands[j].xstart < islands[i].xend &&
+				islands[j].xend > islands[i].xend-length/2 {
+				foundRight = true
+				justBelowRight[i] = j
+			}
+		}
+		if !foundLeft {
+			justBelowLeft[i] = -1
+		}
+		if !foundRight {
+			justBelowRight[i] = -1
+		}
+	}
+	fmt.Println(justBelowLeft)
+	fmt.Println(justBelowRight)
+	// add laders belowLeft and belowRight of each island (if possible)
+	laders := make([][]int, numIsland)
+	for i := 0; i < numIsland; i++ {
+		laders[i] = make([]int, 0)
+	}
+	for i := numIsland - 1; i >= 0; i-- {
+		doLeft := true
+		doRight := true
+		if justBelowLeft[i] == justBelowRight[i] {
+			// only one lader when two are possible
+			choice := rand.Intn(2)
+			if choice == 0 {
+				doLeft = false
+			} else {
+				doRight = false
+			}
+		}
+		// leftLader
+		if doLeft {
+			j := justBelowLeft[i]
+			var islandDown island
+			var ladersDown []int
+			if j == -1 {
+				islandDown.xstart = 0
+				islandDown.xend = width - 1
+				islandDown.altitude = floorLevel
+			} else {
+				islandDown = islands[j]
+				ladersDown = laders[j]
+			}
+			islandUp := islands[i]
+			islandWidth := islandUp.xend - islandUp.xstart + 1
+			islandUp.xend = islandUp.xend - islandWidth/2
+			position := setLaderPosition(laders[i], ladersDown, islandUp, islandDown)
+			drawLader(field, position, islands[i].altitude, islandDown.altitude)
+		}
+		// rightLader
+		if doRight {
+			j := justBelowRight[i]
+			var islandDown island
+			var ladersDown []int
+			if j == -1 {
+				islandDown.xstart = 0
+				islandDown.xend = width - 1
+				islandDown.altitude = floorLevel
+			} else {
+				islandDown = islands[j]
+				ladersDown = laders[j]
+			}
+			islandUp := islands[i]
+			islandWidth := islandUp.xend - islandUp.xstart + 1
+			islandUp.xstart = islandUp.xstart + islandWidth/2
+			position := setLaderPosition(laders[i], ladersDown, islandUp, islandDown)
+			drawLader(field, position, islands[i].altitude, islandDown.altitude)
+		}
+	}
+}
+
+func setLaderPosition(ladersUp, ladersDown []int, islandUp, islandDown island) int {
+	minPosition := islandUp.xstart
+	if islandDown.xstart > minPosition {
+		minPosition = islandDown.xstart
+	}
+	maxPosition := islandUp.xend
+	if islandDown.xend < maxPosition {
+		maxPosition = islandDown.xend
+	}
+	positionRange := maxPosition - minPosition + 1
+	return minPosition + rand.Intn(positionRange)
+}
+
+// ystart is the highest altitude
+func drawLader(field [][]FieldTile, x, ystart, yend int) {
+	for y := ystart; y < yend; y++ {
+		field[y][x] = laderTile
 	}
 }

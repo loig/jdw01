@@ -23,8 +23,8 @@ import (
 )
 
 const (
-	minEntryPoints = 5
-	maxEntryPoints = 10
+	minEntryPoints = 10
+	maxEntryPoints = 15
 	minIslands     = 10
 	maxIslands     = 20
 	minSizeIsland  = 8
