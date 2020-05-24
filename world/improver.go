@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package world
 
 import (
-	"fmt"
 	"math/rand"
 )
 
@@ -54,7 +53,6 @@ func improveFlyworld(field [][]FieldTile, tmpFloorLevel, width, height int) {
 	for y := tmpFloorLevel - 2; y >= 0; y-- {
 		for x := 0; x < width; x++ {
 			if IsFloorField(field[y][x]) {
-				fmt.Println("floorFound:", x, y)
 				minX := x
 				maxX := x
 				for maxX < width && IsFloorField(field[y][maxX]) {
@@ -73,47 +71,86 @@ func improveFlyworld(field [][]FieldTile, tmpFloorLevel, width, height int) {
 					}
 				}
 				middle := minX + (maxX-minX+1)/2
-				fmt.Println(maxX, maxY, middle)
-				for currentY := y + 1; currentY <= maxY; currentY++ {
+				tmpMaxY := maxY
+				if y+maxX-middle < tmpMaxY {
+					tmpMaxY = y + maxX - middle
+				}
+				middleYSave := y
+				for currentY := y + 1; currentY <= tmpMaxY; currentY++ {
 					proba := chanceToGrow - currentY + y
 					if proba <= 0 {
 						proba = 1
 					}
 					if rand.Intn(proba) != 0 {
 						addIslandTile(field, middle, currentY)
+						middleYSave = currentY
 					} else {
 						break
 					}
 				}
+				lastFinalY := middleYSave
+				tmpMaxY = maxY
 				for rightX := middle + 1; rightX <= maxX; rightX++ {
-					for currentY := y + 1; currentY <= maxY; currentY++ {
-						if IsFloorField(field[currentY][rightX-1]) {
-							proba := chanceToGrow - currentY + y - rightX + middle
-							if proba <= 0 {
-								proba = 1
-							}
-							if rand.Intn(proba) != 0 {
+					if y+maxX-rightX < tmpMaxY {
+						tmpMaxY = y + maxX - rightX
+					}
+					if lastFinalY+1 < tmpMaxY {
+						tmpMaxY = lastFinalY + 1
+					}
+					finalY := y
+					for currentY := y + 1; currentY <= tmpMaxY; currentY++ {
+						if currentY+2 < lastFinalY {
+							addIslandTile(field, rightX, currentY)
+							finalY = currentY
+						} else if currentY > lastFinalY {
+							if rand.Intn(chanceToGrow) != 0 {
 								addIslandTile(field, rightX, currentY)
+								finalY = currentY
+							} else {
+								break
+							}
+						} else {
+							if rand.Intn(chanceToGrow) != 0 {
+								addIslandTile(field, rightX, currentY)
+								finalY = currentY
 							} else {
 								break
 							}
 						}
 					}
+					lastFinalY = finalY
 				}
+				lastFinalY = middleYSave
+				tmpMaxY = maxY
 				for leftX := middle - 1; leftX >= minX; leftX-- {
-					for currentY := y + 1; currentY <= maxY; currentY++ {
-						if IsFloorField(field[currentY][leftX+1]) {
-							proba := chanceToGrow - currentY + y - middle + leftX
-							if proba <= 0 {
-								proba = 1
-							}
-							if rand.Intn(proba) != 0 {
+					if y+leftX-minX < tmpMaxY {
+						tmpMaxY = y + leftX - minX
+					}
+					if lastFinalY+1 < tmpMaxY {
+						tmpMaxY = lastFinalY + 1
+					}
+					finalY := y
+					for currentY := y + 1; currentY <= tmpMaxY; currentY++ {
+						if currentY+2 < lastFinalY {
+							addIslandTile(field, leftX, currentY)
+							finalY = currentY
+						} else if currentY > lastFinalY {
+							if rand.Intn(chanceToGrow) != 0 {
 								addIslandTile(field, leftX, currentY)
+								finalY = currentY
+							} else {
+								break
+							}
+						} else {
+							if rand.Intn(chanceToGrow) != 0 {
+								addIslandTile(field, leftX, currentY)
+								finalY = currentY
 							} else {
 								break
 							}
 						}
 					}
+					lastFinalY = finalY
 				}
 				x = maxX + 1
 			}
