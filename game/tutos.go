@@ -115,6 +115,54 @@ func (g *Game) updateTuto2() {
 	g.tutoFrame++
 }
 
-func (g *Game) updateTuto3() {
+const (
+	tuto3EndFrame = 200
+)
 
+func (g *Game) updateTuto3() {
+	if g.tutoFrame < tuto3EndFrame {
+		if g.tutoFrame > idleFrames {
+			if g.tutoStep == 0 {
+				g.whiteCharacter.state = strike
+				g.whiteCharacter.strikeCurrentFrame = 0
+				g.blueCharacter.state = strike
+				g.blueCharacter.strikeCurrentFrame = 0
+				g.pinkCharacter.state = strike
+				g.pinkCharacter.strikeCurrentFrame = 0
+				g.tutoStep = 1
+			} else if g.tutoStep == 1 {
+				g.whiteCharacter.strikeCurrentFrame++
+				if g.whiteCharacter.strikeCurrentFrame >= g.blueCharacter.strikeNumFrames {
+					g.strikeEffectOnField(g.whiteCharacter.x, g.whiteCharacter.y, 1)
+					g.whiteCharacter.state = idle
+					g.tutoStep = 2
+				}
+				g.blueCharacter.strikeCurrentFrame++
+				if g.blueCharacter.strikeCurrentFrame >= g.blueCharacter.strikeNumFrames {
+					g.strikeEffectOnField(g.blueCharacter.x, g.blueCharacter.y, 1)
+					g.blueCharacter.state = idle
+					g.tutoStep = 2
+				}
+				g.pinkCharacter.strikeCurrentFrame++
+				if g.pinkCharacter.strikeCurrentFrame >= g.blueCharacter.strikeNumFrames {
+					g.strikeEffectOnField(g.pinkCharacter.x, g.pinkCharacter.y, 1)
+					g.pinkCharacter.state = idle
+					g.tutoStep = 2
+				}
+			}
+		}
+	} else {
+		g.tutoFrame = 0
+		g.tutoStep = 0
+		g.field = world.GetTuto3Field()
+	}
+	g.tutoFrame++
+}
+
+func (g *Game) updateTuto4() {
+	if g.tutoFrame > idleFrames {
+		g.tutoFrame = 0
+		g.tutoStep = (g.tutoStep + 1) % 3
+	}
+	g.tutoFrame++
 }

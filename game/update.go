@@ -81,7 +81,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(2)) {
 			g.tutoStep = 0
 			g.tutoFrame = 0
-			g.field = world.Tuto3Field
+			g.field = world.GetTuto3Field()
 			g.blueCharacter.x = world.BlueXTuto3
 			g.blueCharacter.y = world.BlueYTuto3
 			g.blueCharacter.state = idle
@@ -109,6 +109,22 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(2)) {
 			g.tutoStep = 0
 			g.tutoFrame = 0
+			g.field = world.GetTuto4Field()
+			g.blueCharacter.x = world.BlueXTuto4
+			g.blueCharacter.y = world.BlueYTuto4
+			g.blueCharacter.state = idle
+			g.blueCharacter.animationFrame = 0
+			g.blueCharacter.animationStep = 0
+			g.whiteCharacter.x = world.WhiteXTuto4
+			g.whiteCharacter.y = world.WhiteYTuto4
+			g.whiteCharacter.state = idle
+			g.whiteCharacter.animationFrame = 0
+			g.whiteCharacter.animationStep = 0
+			g.pinkCharacter.x = world.PinkXTuto4
+			g.pinkCharacter.y = world.PinkYTuto4
+			g.pinkCharacter.state = idle
+			g.pinkCharacter.animationFrame = 0
+			g.pinkCharacter.animationStep = 0
 			g.state = tuto4
 		} else {
 			g.setCameraPosition()
@@ -118,26 +134,33 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		return nil
 
 	case tuto4:
-		g.field = g.world
-		g.blueCharacter.x = g.blueStartX
-		g.blueCharacter.y = g.blueStartY
-		g.blueCharacter.speed = 0.11
-		g.blueCharacter.state = idle
-		g.blueCharacter.animationFrame = 0
-		g.blueCharacter.animationStep = 0
-		g.whiteCharacter.x = g.whiteStartX
-		g.whiteCharacter.y = g.whiteStartY
-		g.whiteCharacter.speed = 0.09
-		g.whiteCharacter.state = idle
-		g.whiteCharacter.animationFrame = 0
-		g.whiteCharacter.animationStep = 0
-		g.pinkCharacter.x = g.pinkStartX
-		g.pinkCharacter.y = g.pinkStartY
-		g.pinkCharacter.speed = 0.13
-		g.pinkCharacter.state = idle
-		g.pinkCharacter.animationFrame = 0
-		g.pinkCharacter.animationStep = 0
-		g.state = playingBlue
+		if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(2)) {
+			g.field = g.world
+			g.blueCharacter.x = g.blueStartX
+			g.blueCharacter.y = g.blueStartY
+			g.blueCharacter.speed = 0.11
+			g.blueCharacter.state = idle
+			g.blueCharacter.animationFrame = 0
+			g.blueCharacter.animationStep = 0
+			g.whiteCharacter.x = g.whiteStartX
+			g.whiteCharacter.y = g.whiteStartY
+			g.whiteCharacter.speed = 0.09
+			g.whiteCharacter.state = idle
+			g.whiteCharacter.animationFrame = 0
+			g.whiteCharacter.animationStep = 0
+			g.pinkCharacter.x = g.pinkStartX
+			g.pinkCharacter.y = g.pinkStartY
+			g.pinkCharacter.speed = 0.13
+			g.pinkCharacter.state = idle
+			g.pinkCharacter.animationFrame = 0
+			g.pinkCharacter.animationStep = 0
+			g.state = playingBlue
+		} else {
+			g.setCameraPosition()
+			g.updateAnimation()
+			g.updateTuto4()
+		}
+		return nil
 
 	case playingBlue, playingPink, playingWhite:
 		// get current player
