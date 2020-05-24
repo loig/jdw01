@@ -34,7 +34,7 @@ func (g *Game) setCameraPosition() {
 	case playingBlue, blueSpecialMove:
 		g.camera.x = g.blueCharacter.x * 32
 		g.camera.y = g.blueCharacter.y * 32
-	case playingPink, pinkSpecialMoveUp, pinkSpecialMoveDown:
+	case playingPink, pinkSpecialMoveUp, pinkSpecialMoveDown, pinkSpecialMoveDirectUp, pinkSpecialMoveDirectDown:
 		g.camera.x = g.pinkCharacter.x * 32
 		g.camera.y = g.pinkCharacter.y * 32
 	case playingWhite, whiteSpecialMove, whiteSpecialMoveIdle:
