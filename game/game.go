@@ -27,6 +27,7 @@ import (
 type Game struct {
 	state          gameState
 	gamepadID      int
+	buttons        gamepadbuttons
 	camera         cameraInfo
 	audioManager   audioManagerInfo
 	screenWidth    int

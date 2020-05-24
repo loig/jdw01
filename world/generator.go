@@ -91,5 +91,7 @@ func GenerateField(width, height int) (field [][]FieldTile, blueX, blueY, pinkX,
 	field = addHouse(field, tmpFloorLevel)
 
 	blueStart.x = 190
+	whiteStart.x = 189
+	pinkStart.x = 188
 	return field, float64(blueStart.x), float64(blueStart.y), float64(pinkStart.x), float64(pinkStart.y), float64(whiteStart.x), float64(whiteStart.y), float64(goal.x), float64(goal.y)
 }

@@ -18,25 +18,79 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/ebitenutil"
+	"github.com/hajimehoshi/ebiten/text"
 	"github.com/loig/jdw01/world"
 )
 
 var op *ebiten.DrawImageOptions
 var sub image.Rectangle
+var endImage *ebiten.Image
 
 // Draw implements one of the required methods
 // for the ebiten.Game interface
 func (g *Game) Draw(screen *ebiten.Image) {
 
-	switch g.state {
-	case initGame:
+	switch {
+	case g.state == initGame:
+		op = &ebiten.DrawImageOptions{}
+		op.GeoM.Scale(2, 2)
+		op.GeoM.Translate(float64(g.screenWidth)/2-100, float64(g.screenHeight)/2-100)
+		switch g.tutoStep {
+		case 0:
+			ebitenutil.DebugPrint(screen, "No gamepad")
+		case 1:
+			ebitenutil.DebugPrint(screen, "Press left")
+			screen.DrawImage(buttonLeftImage, op)
+		case 2:
+			ebitenutil.DebugPrint(screen, "Press right")
+			screen.DrawImage(buttonRightImage, op)
+		case 3:
+			ebitenutil.DebugPrint(screen, "Press up")
+			screen.DrawImage(buttonUpImage, op)
+		case 4:
+			ebitenutil.DebugPrint(screen, "Press down")
+			screen.DrawImage(buttonDownImage, op)
+		case 5:
+			ebitenutil.DebugPrint(screen, "Press X")
+			screen.DrawImage(buttonXImage, op)
+		case 6:
+			ebitenutil.DebugPrint(screen, "Press LB")
+			screen.DrawImage(buttonLImage, op)
+		case 7:
+			ebitenutil.DebugPrint(screen, "Press RB")
+			screen.DrawImage(buttonRImage, op)
+		}
 		return
+
+	case g.state == theEnd && (g.tutoFrame > 2 || g.tutoStep > 0):
+		op = &ebiten.DrawImageOptions{}
+		saturationScale := 0.1
+		valueScale := 0.2
+		if g.tutoStep == 0 {
+			saturationScale = float64(200-g.tutoFrame)/200 + 0.1
+			if saturationScale > 1 {
+				saturationScale = 1
+			}
+			valueScale = float64(200-g.tutoFrame)/200 + 0.2
+			if valueScale > 1 {
+				valueScale = 1
+			}
+		}
+		op.ColorM.ChangeHSV(0, saturationScale, valueScale)
+		screen.DrawImage(endImage, op)
+		if g.tutoStep != 0 {
+			text.Draw(screen, "Home!", endFont, 400, 350, color.White)
+			op = &ebiten.DrawImageOptions{}
+			op.GeoM.Scale(0.5, 0.5)
+			op.GeoM.Translate(float64(g.screenWidth)-10-50, float64(g.screenHeight)-10-50)
+			screen.DrawImage(buttonXImage, op)
+		}
+
 	default:
 		// get bounds
 		xmin, ymin, xmax, ymax := g.visibleRectangle()
@@ -153,7 +207,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			}
 		}
 
-		if g.state != tuto1 && g.state != tuto2 && g.state != tuto3 && g.state != tuto4 {
+		if g.state != tuto1 && g.state != tuto2 && g.state != tuto3 && g.state != tuto4 && g.state != theEnd {
 			// Draw the minimap
 			op = &ebiten.DrawImageOptions{}
 			op.GeoM.Scale(0.125, 0.125)
@@ -178,16 +232,27 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			case tuto4:
 				screen.DrawImage(buttonRImage, op)
 			}
+			if g.state != theEnd {
+				op = &ebiten.DrawImageOptions{}
+				op.GeoM.Scale(0.5, 0.5)
+				op.GeoM.Translate(float64(g.screenWidth)-10-50, float64(g.screenHeight)-10-50)
+				screen.DrawImage(buttonXImage, op)
+			}
+		}
+
+		if g.state == theEnd && g.tutoFrame == 2 {
+			endImage, _ = ebiten.NewImage(g.screenWidth, g.screenHeight, ebiten.FilterDefault)
 			op = &ebiten.DrawImageOptions{}
-			op.GeoM.Scale(0.5, 0.5)
-			op.GeoM.Translate(float64(g.screenWidth)-10-50, float64(g.screenHeight)-10-50)
-			screen.DrawImage(buttonXImage, op)
+			endImage.DrawImage(screen, op)
 		}
 
 		// DEBUG
-		ebitenutil.DrawLine(screen, float64(g.screenWidth)/2, 0, float64(g.screenWidth)/2, float64(g.screenHeight), color.White)
-		ebitenutil.DrawLine(screen, 0, float64(g.screenHeight)/2, float64(g.screenWidth), float64(g.screenHeight)/2, color.White)
-		s := fmt.Sprint("FPS: ", ebiten.CurrentFPS(), "\n", "TPS: ", ebiten.CurrentTPS(), "\n", "Camera: ", xmin, ", ", ymin, ", ", xmax, ",", ymax, "\n", "Blue: ", g.blueCharacter.x, ", ", g.blueCharacter.y)
-		ebitenutil.DebugPrint(screen, s)
+		/*
+			ebitenutil.DrawLine(screen, float64(g.screenWidth)/2, 0, float64(g.screenWidth)/2, float64(g.screenHeight), color.White)
+			ebitenutil.DrawLine(screen, 0, float64(g.screenHeight)/2, float64(g.screenWidth), float64(g.screenHeight)/2, color.White)
+			s := fmt.Sprint("FPS: ", ebiten.CurrentFPS(), "\n", "TPS: ", ebiten.CurrentTPS(), "\n", "Camera: ", xmin, ", ", ymin, ", ", xmax, ",", ymax, "\n", "Blue: ", g.blueCharacter.x, ", ", g.blueCharacter.y)
+			ebitenutil.DebugPrint(screen, s)
+		*/
 	}
+
 }

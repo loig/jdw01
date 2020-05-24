@@ -20,8 +20,11 @@ package game
 import (
 	_ "image/png" //for ebitenutil.NewImageFromFile
 
+	"github.com/golang/freetype/truetype"
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/ebitenutil"
+	"github.com/hajimehoshi/ebiten/examples/resources/fonts"
+	"golang.org/x/image/font"
 )
 
 var blueCharacterImage *ebiten.Image
@@ -36,6 +39,7 @@ var buttonUpImage *ebiten.Image
 var buttonDownImage *ebiten.Image
 var buttonLImage *ebiten.Image
 var buttonRImage *ebiten.Image
+var endFont font.Face
 
 func loadAssets() (err error) {
 
@@ -98,6 +102,16 @@ func loadAssets() (err error) {
 	if err != nil {
 		return err
 	}
+
+	ttfont, err := truetype.Parse(fonts.ArcadeN_ttf)
+	if err != nil {
+		panic(err)
+	}
+	endFont = truetype.NewFace(ttfont, &truetype.Options{
+		Size:    50,
+		DPI:     72,
+		Hinting: font.HintingFull,
+	})
 
 	return nil
 }

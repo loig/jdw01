@@ -38,19 +38,79 @@ func (g *Game) Update(screen *ebiten.Image) error {
 
 	case initGame:
 		// Check for gamepad
-		gpIDs := ebiten.GamepadIDs()
-		if len(gpIDs) <= 0 {
-			return errNoGamePad
+		gpID := getGamepadPlugged()
+		switch g.tutoStep {
+		case 0:
+			if gpID != -1 {
+				g.gamepadID = gpID
+				g.tutoStep++
+			}
+		case 1:
+			buttonPressed := g.getButtonPressed()
+			if buttonPressed >= 0 {
+				g.buttons.left = buttonPressed
+				g.tutoStep++
+			}
+		case 2:
+			buttonPressed := g.getButtonPressed()
+			if buttonPressed >= 0 {
+				g.buttons.right = buttonPressed
+				g.tutoStep++
+			}
+		case 3:
+			buttonPressed := g.getButtonPressed()
+			if buttonPressed >= 0 {
+				g.buttons.up = buttonPressed
+				g.tutoStep++
+			}
+		case 4:
+			buttonPressed := g.getButtonPressed()
+			if buttonPressed >= 0 {
+				g.buttons.down = buttonPressed
+				g.tutoStep++
+			}
+		case 5:
+			buttonPressed := g.getButtonPressed()
+			if buttonPressed >= 0 {
+				g.buttons.x = buttonPressed
+				g.tutoStep++
+			}
+		case 6:
+			buttonPressed := g.getButtonPressed()
+			if buttonPressed >= 0 {
+				g.buttons.lb = buttonPressed
+				g.tutoStep++
+			}
+		case 7:
+			buttonPressed := g.getButtonPressed()
+			if buttonPressed >= 0 {
+				g.buttons.rb = buttonPressed
+				g.tutoStep++
+			}
+		default:
+			g.field = world.Tuto1Field
+			g.state = tuto1
+			g.tutoStep = 0
+			g.tutoFrame = 0
 		}
-		g.gamepadID = gpIDs[0]
-		g.field = world.Tuto1Field
-		g.state = tuto1
-		g.tutoStep = 0
-		g.tutoFrame = 0
+		return nil
+
+	case theEnd:
+		if g.tutoStep == 0 {
+			g.tutoFrame++
+			if g.tutoFrame > 200 {
+				g.tutoStep++
+				g.tutoFrame = 0
+			}
+		} else {
+			if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(g.buttons.x)) {
+				return errEndGame
+			}
+		}
 		return nil
 
 	case tuto1:
-		if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(2)) {
+		if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(g.buttons.x)) {
 			g.tutoStep = 0
 			g.tutoFrame = 0
 			g.field = world.Tuto2Field
@@ -78,7 +138,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		return nil
 
 	case tuto2:
-		if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(2)) {
+		if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(g.buttons.x)) {
 			g.tutoStep = 0
 			g.tutoFrame = 0
 			g.field = world.GetTuto3Field()
@@ -106,7 +166,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		return nil
 
 	case tuto3:
-		if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(2)) {
+		if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(g.buttons.x)) {
 			g.tutoStep = 0
 			g.tutoFrame = 0
 			g.field = world.GetTuto4Field()
@@ -134,7 +194,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		return nil
 
 	case tuto4:
-		if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(2)) {
+		if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(g.buttons.x)) {
 			g.field = g.world
 			g.blueCharacter.x = g.blueStartX
 			g.blueCharacter.y = g.blueStartY
@@ -155,6 +215,8 @@ func (g *Game) Update(screen *ebiten.Image) error {
 			g.pinkCharacter.animationFrame = 0
 			g.pinkCharacter.animationStep = 0
 			g.state = playingBlue
+			g.tutoStep = 0
+			g.tutoFrame = 0
 		} else {
 			g.setCameraPosition()
 			g.updateAnimation()
@@ -175,19 +237,19 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		}
 		// perform its move
 		switch {
-		case ebiten.IsGamepadButtonPressed(g.gamepadID, ebiten.GamepadButton(12)):
+		case ebiten.IsGamepadButtonPressed(g.gamepadID, ebiten.GamepadButton(g.buttons.right)):
 			g.tryRightMove(currentCharacter)
-		case ebiten.IsGamepadButtonPressed(g.gamepadID, ebiten.GamepadButton(14)):
+		case ebiten.IsGamepadButtonPressed(g.gamepadID, ebiten.GamepadButton(g.buttons.left)):
 			g.tryLeftMove(currentCharacter)
-		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(11)):
+		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(g.buttons.up)):
 			g.tryUpMove(currentCharacter)
-		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(13)):
+		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(g.buttons.down)):
 			g.tryDownMove(currentCharacter)
-		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(5)):
+		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(g.buttons.rb)):
 			g.tryRightSwitch(currentCharacter)
-		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(4)):
+		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(g.buttons.lb)):
 			g.tryLeftSwitch(currentCharacter)
-		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(2)):
+		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(g.buttons.x)):
 			currentCharacter.state = strike
 			currentCharacter.strikeCurrentFrame = 0
 			switch g.state {
@@ -219,13 +281,13 @@ func (g *Game) Update(screen *ebiten.Image) error {
 
 	case whiteSpecialMove, whiteSpecialMoveIdle:
 		switch {
-		case ebiten.IsGamepadButtonPressed(g.gamepadID, ebiten.GamepadButton(11)):
+		case ebiten.IsGamepadButtonPressed(g.gamepadID, ebiten.GamepadButton(g.buttons.up)):
 			g.tryWhiteSpecialMoveUp()
-		case ebiten.IsGamepadButtonPressed(g.gamepadID, ebiten.GamepadButton(13)):
+		case ebiten.IsGamepadButtonPressed(g.gamepadID, ebiten.GamepadButton(g.buttons.down)):
 			g.tryWhiteSpecialMoveDown()
-		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(5)):
+		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(g.buttons.rb)):
 			g.tryWhiteSpecialSwitchRight()
-		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(4)):
+		case inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(g.buttons.lb)):
 			g.tryWhiteSpecialSwitchLeft()
 		default:
 			g.state = whiteSpecialMoveIdle
