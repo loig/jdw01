@@ -29,6 +29,13 @@ var whiteCharacterImage *ebiten.Image
 var pinkCharacterImage *ebiten.Image
 var tilesImage *ebiten.Image
 var dayBackgroundImage *ebiten.Image
+var buttonRightImage *ebiten.Image
+var buttonLeftImage *ebiten.Image
+var buttonXImage *ebiten.Image
+var buttonUpImage *ebiten.Image
+var buttonDownImage *ebiten.Image
+var buttonLImage *ebiten.Image
+var buttonRImage *ebiten.Image
 
 func loadAssets() (err error) {
 
@@ -53,6 +60,41 @@ func loadAssets() (err error) {
 	}
 
 	dayBackgroundImage, _, err = ebitenutil.NewImageFromFile("assets/daybackground.png", ebiten.FilterDefault)
+	if err != nil {
+		return err
+	}
+
+	buttonRightImage, _, err = ebitenutil.NewImageFromFile("assets/rightbutton.png", ebiten.FilterDefault)
+	if err != nil {
+		return err
+	}
+
+	buttonLeftImage, _, err = ebitenutil.NewImageFromFile("assets/leftbutton.png", ebiten.FilterDefault)
+	if err != nil {
+		return err
+	}
+
+	buttonXImage, _, err = ebitenutil.NewImageFromFile("assets/xbutton.png", ebiten.FilterDefault)
+	if err != nil {
+		return err
+	}
+
+	buttonUpImage, _, err = ebitenutil.NewImageFromFile("assets/upbutton.png", ebiten.FilterDefault)
+	if err != nil {
+		return err
+	}
+
+	buttonDownImage, _, err = ebitenutil.NewImageFromFile("assets/downbutton.png", ebiten.FilterDefault)
+	if err != nil {
+		return err
+	}
+
+	buttonLImage, _, err = ebitenutil.NewImageFromFile("assets/lbutton.png", ebiten.FilterDefault)
+	if err != nil {
+		return err
+	}
+
+	buttonRImage, _, err = ebitenutil.NewImageFromFile("assets/rbutton.png", ebiten.FilterDefault)
 	if err != nil {
 		return err
 	}

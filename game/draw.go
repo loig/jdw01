@@ -137,6 +137,28 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			op.GeoM.Translate(5, float64(g.screenHeight)-5-(float64(len(g.field))*16+32)*0.125)
 			screen.DrawImage(miniMap, op)
 			screen.DrawImage(miniMapOverlay, op)
+		} else {
+			// Draw buttons
+			op = &ebiten.DrawImageOptions{}
+			op.GeoM.Scale(1.25, 1.25)
+			switch g.state {
+			case tuto1:
+				screen.DrawImage(buttonRightImage, op)
+			case tuto2:
+				if g.tutoStep == 0 {
+					screen.DrawImage(buttonUpImage, op)
+				} else {
+					screen.DrawImage(buttonDownImage, op)
+				}
+			case tuto3:
+				screen.DrawImage(buttonXImage, op)
+			case tuto4:
+				screen.DrawImage(buttonRImage, op)
+			}
+			op = &ebiten.DrawImageOptions{}
+			op.GeoM.Scale(0.5, 0.5)
+			op.GeoM.Translate(float64(g.screenWidth)-10-50, float64(g.screenHeight)-10-50)
+			screen.DrawImage(buttonXImage, op)
 		}
 
 		// DEBUG

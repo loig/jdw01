@@ -75,6 +75,7 @@ func (g *Game) updateTuto2() {
 	if g.tutoFrame < tuto2EndFrame {
 		if g.tutoFrame > idleFrames {
 			if g.tutoFrame < tuto2EndStep1 {
+				g.tutoStep = 0
 				if g.whiteCharacter.state == specialMove {
 					g.tryWhiteSpecialMoveUp()
 				} else {
@@ -87,6 +88,7 @@ func (g *Game) updateTuto2() {
 				}
 				g.tryUpMove(&g.blueCharacter)
 			} else {
+				g.tutoStep = 1
 				if g.whiteCharacter.state == specialMove {
 					g.tryWhiteSpecialMoveDown()
 				} else {
