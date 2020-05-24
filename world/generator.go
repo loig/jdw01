@@ -43,6 +43,8 @@ func GenerateField(width, height int) (field [][]FieldTile, blueX, blueY, pinkX,
 	// seeding the random generator
 	rand.Seed(time.Now().UTC().UnixNano())
 
+	width = width - 10
+
 	tmpFloorLevel := height * 3 / 4
 	field = make([][]FieldTile, height)
 	for y := 0; y < height; y++ {
@@ -86,5 +88,8 @@ func GenerateField(width, height int) (field [][]FieldTile, blueX, blueY, pinkX,
 	// If things are added outside of the playing field, it must be
 	// done after this point (i.e. things added to the left/right of the field)
 
+	field = addHouse(field, tmpFloorLevel)
+
+	blueStart.x = 190
 	return field, float64(blueStart.x), float64(blueStart.y), float64(pinkStart.x), float64(pinkStart.y), float64(whiteStart.x), float64(whiteStart.y), float64(goal.x), float64(goal.y)
 }
