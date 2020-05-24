@@ -17,6 +17,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package world
 
+// How to fill outside the play field
+const (
+	DummyX = 3
+	DummyY = 0
+)
+
 var (
 	nothingType         = FieldType{nothing, 10, 1}
 	destroyableWallType = FieldType{destroyableWall, 4, 2}

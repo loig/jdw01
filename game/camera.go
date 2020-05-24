@@ -72,17 +72,5 @@ func (g *Game) visibleRectangle() (xmin, ymin, xmax, ymax int) {
 	ymin = int(math.Round((g.camera.y-float64(g.screenHeight)/2)/32)) - 1
 	xmax = int(math.Round((g.camera.x+float64(g.screenWidth)/2)/32)) + 1
 	ymax = int(math.Round((g.camera.y+float64(g.screenHeight)/2)/32)) + 1
-	if xmin < 0 {
-		xmin = 0
-	}
-	if ymin < 0 {
-		ymin = 0
-	}
-	if ymax > len(g.field) {
-		ymax = len(g.field)
-	}
-	if xmax > len(g.field[0]) {
-		xmax = len(g.field[0])
-	}
 	return xmin, ymin, xmax, ymax
 }

@@ -24,6 +24,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/ebitenutil"
+	"github.com/loig/jdw01/world"
 )
 
 var op *ebiten.DrawImageOptions
@@ -45,22 +46,35 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		screen.DrawImage(dayBackgroundImage, op)
 
 		// Draw the field
+		if ymin < 0 {
+			ymin = 0
+		}
 		for y := ymin; y < ymax; y++ {
 			for x := xmin; x < xmax; x++ {
 				op = &ebiten.DrawImageOptions{}
 				op.GeoM.Scale(2, 2)
 				op.GeoM.Translate(float64(x)*32, float64(y)*32)
 				g.applyCamera(op)
-				sub = image.Rect(
-					16*g.field[y][x].Tile.LookX, 16*g.field[y][x].Tile.LookY,
-					16+16*g.field[y][x].Tile.LookX, 16+16*g.field[y][x].Tile.LookY,
-				)
-				screen.DrawImage(tilesImage.SubImage(sub).(*ebiten.Image), op)
-				sub = image.Rect(
-					16*g.field[y][x].Decoration.LookX, 16*g.field[y][x].Decoration.LookY,
-					16+16*g.field[y][x].Decoration.LookX, 16+16*g.field[y][x].Decoration.LookY,
-				)
-				screen.DrawImage(tilesImage.SubImage(sub).(*ebiten.Image), op)
+				if x < 0 || x >= len(g.field[0]) || y >= len(g.field) {
+					if g.state != tuto1 && g.state != tuto2 && g.state != tuto3 && g.state != tuto4 {
+						sub = image.Rect(
+							16*world.DummyX, 16*world.DummyY,
+							16+16*world.DummyX, 16+16*world.DummyY,
+						)
+						screen.DrawImage(tilesImage.SubImage(sub).(*ebiten.Image), op)
+					}
+				} else {
+					sub = image.Rect(
+						16*g.field[y][x].Tile.LookX, 16*g.field[y][x].Tile.LookY,
+						16+16*g.field[y][x].Tile.LookX, 16+16*g.field[y][x].Tile.LookY,
+					)
+					screen.DrawImage(tilesImage.SubImage(sub).(*ebiten.Image), op)
+					sub = image.Rect(
+						16*g.field[y][x].Decoration.LookX, 16*g.field[y][x].Decoration.LookY,
+						16+16*g.field[y][x].Decoration.LookX, 16+16*g.field[y][x].Decoration.LookY,
+					)
+					screen.DrawImage(tilesImage.SubImage(sub).(*ebiten.Image), op)
+				}
 			}
 		}
 
@@ -116,6 +130,15 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		screen.DrawImage(pinkCharacterImage.SubImage(sub).(*ebiten.Image), op)
 
 		// Draw the front layout of the field
+		if ymax > len(g.field) {
+			ymax = len(g.field)
+		}
+		if xmin < 0 {
+			xmin = 0
+		}
+		if xmax > len(g.field[0]) {
+			xmax = len(g.field[0])
+		}
 		for y := ymin; y < ymax; y++ {
 			for x := xmin; x < xmax; x++ {
 				op = &ebiten.DrawImageOptions{}
