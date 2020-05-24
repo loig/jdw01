@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 import (
-	"fmt"
 	"io/ioutil"
 
 	"github.com/hajimehoshi/ebiten/audio"
@@ -39,14 +38,23 @@ const (
 	pinkSound
 	blueSound
 	noSound
+	strikeSound
 )
 
-var moveSoundBytes []byte
+var (
+	moveSoundBytes   []byte
+	pinkSoundBytes   []byte
+	blueSoundBytes   []byte
+	strikeSoundBytes []byte
+)
 
 func (g *Game) initSound() (err error) {
 	g.audioManager.audioContext, err = audio.NewContext(44100)
 
 	soundFile, err := ebitenutil.OpenFile("assets/move.mp3")
+	if err != nil {
+		return err
+	}
 	sound, err := mp3.Decode(g.audioManager.audioContext, soundFile)
 	if err != nil {
 		return err
@@ -56,20 +64,65 @@ func (g *Game) initSound() (err error) {
 		return err
 	}
 
+	soundFile, err = ebitenutil.OpenFile("assets/pinkSpecial.mp3")
+	if err != nil {
+		return err
+	}
+	sound, err = mp3.Decode(g.audioManager.audioContext, soundFile)
+	if err != nil {
+		return err
+	}
+	pinkSoundBytes, err = ioutil.ReadAll(sound)
+	if err != nil {
+		return err
+	}
+
+	soundFile, err = ebitenutil.OpenFile("assets/blueSpecial.mp3")
+	if err != nil {
+		return err
+	}
+	sound, err = mp3.Decode(g.audioManager.audioContext, soundFile)
+	if err != nil {
+		return err
+	}
+	blueSoundBytes, err = ioutil.ReadAll(sound)
+	if err != nil {
+		return err
+	}
+
+	soundFile, err = ebitenutil.OpenFile("assets/strike.mp3")
+	if err != nil {
+		return err
+	}
+	sound, err = mp3.Decode(g.audioManager.audioContext, soundFile)
+	if err != nil {
+		return err
+	}
+	strikeSoundBytes, err = ioutil.ReadAll(sound)
+	if err != nil {
+		return err
+	}
+
 	return err
 }
 
 func (g *Game) updateSound() {
+
 	soundToPlay := noSound
-	if g.state == playingBlue && g.blueCharacter.state == move {
+	if g.blueCharacter.state == move ||
+		g.whiteCharacter.state == move ||
+		g.pinkCharacter.state == move ||
+		g.state == whiteSpecialMove {
 		soundToPlay = moveSound
+	} else if g.pinkCharacter.state == specialMove {
+		soundToPlay = pinkSound
+	} else if g.blueCharacter.state == specialMove {
+		soundToPlay = blueSound
+	} else if g.blueCharacter.state == strike {
+		soundToPlay = strikeSound
 	}
-	fmt.Println(soundToPlay, g.audioManager.currentSound)
 
 	if soundToPlay != g.audioManager.currentSound {
-		if g.audioManager.soundPlayer != nil {
-			g.audioManager.soundPlayer.Pause()
-		}
 		switch soundToPlay {
 		case noSound:
 			g.audioManager.soundPlayer = nil
@@ -78,6 +131,27 @@ func (g *Game) updateSound() {
 				g.audioManager.audioContext, moveSoundBytes,
 			)
 			g.audioManager.soundPlayer.Play()
+		case pinkSound:
+			if g.audioManager.soundPlayer != nil {
+				g.audioManager.soundPlayer.Pause()
+			}
+			g.audioManager.soundPlayer = nil
+			tmpPlayer, _ := audio.NewPlayerFromBytes(
+				g.audioManager.audioContext, pinkSoundBytes,
+			)
+			tmpPlayer.Play()
+		case blueSound:
+			g.audioManager.soundPlayer = nil
+			tmpPlayer, _ := audio.NewPlayerFromBytes(
+				g.audioManager.audioContext, blueSoundBytes,
+			)
+			tmpPlayer.Play()
+		case strikeSound:
+			g.audioManager.soundPlayer = nil
+			tmpPlayer, _ := audio.NewPlayerFromBytes(
+				g.audioManager.audioContext, strikeSoundBytes,
+			)
+			tmpPlayer.Play()
 		}
 		g.audioManager.currentSound = soundToPlay
 		return
