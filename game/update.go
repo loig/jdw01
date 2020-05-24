@@ -50,9 +50,15 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		return nil
 
 	case tuto1:
-		g.setCameraPosition()
-		g.updateAnimation()
-		g.updateTuto1()
+		if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(2)) {
+			g.tutoStep = 0
+			g.tutoFrame = 0
+			g.state = tuto2
+		} else {
+			g.setCameraPosition()
+			g.updateAnimation()
+			g.updateTuto1()
+		}
 		return nil
 
 	case tuto2:
@@ -62,6 +68,16 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		g.state = tuto4
 
 	case tuto4:
+		g.field = g.world
+		g.blueCharacter.x = g.blueStartX
+		g.blueCharacter.y = g.blueStartY
+		g.blueCharacter.speed = 0.11
+		g.whiteCharacter.x = g.whiteStartX
+		g.whiteCharacter.y = g.whiteStartY
+		g.whiteCharacter.speed = 0.09
+		g.pinkCharacter.x = g.pinkStartX
+		g.pinkCharacter.y = g.pinkStartY
+		g.pinkCharacter.speed = 0.13
 		g.state = playingBlue
 
 	case playingBlue, playingPink, playingWhite:

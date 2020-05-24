@@ -23,9 +23,9 @@ import (
 
 const (
 	idleFrames     = 100
-	blueStartFrame = 200
-	pinkStartFrame = 400
-	tuto1EndFrame  = 800
+	blueStartFrame = 100 // 200
+	pinkStartFrame = 100 // 400
+	tuto1EndFrame  = 500
 )
 
 func (g *Game) updateTuto1() {
@@ -56,7 +56,6 @@ func (g *Game) updateTuto1() {
 		g.blueCharacter.x = world.BlueXTuto1
 		g.blueCharacter.y = world.BlueYTuto1
 		g.blueCharacter.state = idle
-		g.blueCharacter.specialMoveCurrentFrame = 0
 		g.whiteCharacter.x = world.WhiteXTuto1
 		g.whiteCharacter.y = world.WhiteYTuto1
 		g.whiteCharacter.state = idle

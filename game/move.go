@@ -35,7 +35,6 @@ func (g *Game) tryRightMove(currentCharacter *character) {
 		if g.state == playingBlue {
 			g.state = blueSpecialMove
 			currentCharacter.state = specialMove
-			currentCharacter.specialMoveCurrentFrame = 0
 		} else {
 			currentCharacter.state = idle
 		}
@@ -49,11 +48,9 @@ func (g *Game) tryRightMove(currentCharacter *character) {
 		if g.state == playingBlue {
 			g.state = blueSpecialMove
 			currentCharacter.state = specialMove
-			currentCharacter.specialMoveCurrentFrame = 0
 		} else if g.state == playingPink {
 			g.state = pinkSpecialMoveUp
 			currentCharacter.state = specialMove
-			currentCharacter.specialMoveCurrentFrame = 0
 		} else {
 			currentCharacter.state = idle
 		}
@@ -61,7 +58,6 @@ func (g *Game) tryRightMove(currentCharacter *character) {
 		if g.state == playingPink {
 			g.state = pinkSpecialMoveDown
 			currentCharacter.state = specialMove
-			currentCharacter.specialMoveCurrentFrame = 0
 		} else {
 			currentCharacter.x += currentCharacter.speed
 			currentCharacter.state = move
@@ -76,7 +72,6 @@ func (g *Game) tryRightMove(currentCharacter *character) {
 		if g.state == playingPink {
 			g.state = pinkSpecialMoveDown
 			currentCharacter.state = specialMove
-			currentCharacter.specialMoveCurrentFrame = 0
 		} else {
 			currentCharacter.state = idle
 		}
@@ -90,7 +85,6 @@ func (g *Game) tryRightMove(currentCharacter *character) {
 		if g.state == playingPink {
 			g.state = pinkSpecialMoveUp
 			currentCharacter.state = specialMove
-			currentCharacter.specialMoveCurrentFrame = 0
 		} else {
 			currentCharacter.state = idle
 		}
@@ -109,7 +103,6 @@ func (g *Game) tryLeftMove(currentCharacter *character) {
 		if g.state == playingBlue {
 			g.state = blueSpecialMove
 			currentCharacter.state = specialMove
-			currentCharacter.specialMoveCurrentFrame = 0
 		} else {
 			currentCharacter.state = idle
 		}
@@ -117,11 +110,9 @@ func (g *Game) tryLeftMove(currentCharacter *character) {
 		if g.state == playingBlue {
 			g.state = blueSpecialMove
 			currentCharacter.state = specialMove
-			currentCharacter.specialMoveCurrentFrame = 0
 		} else if g.state == playingPink {
 			g.state = pinkSpecialMoveUp
 			currentCharacter.state = specialMove
-			currentCharacter.specialMoveCurrentFrame = 0
 		} else {
 			currentCharacter.state = idle
 		}
@@ -129,7 +120,6 @@ func (g *Game) tryLeftMove(currentCharacter *character) {
 		if g.state == playingPink {
 			g.state = pinkSpecialMoveDown
 			currentCharacter.state = specialMove
-			currentCharacter.specialMoveCurrentFrame = 0
 		} else {
 			currentCharacter.x -= currentCharacter.speed
 			currentCharacter.state = move
@@ -138,7 +128,6 @@ func (g *Game) tryLeftMove(currentCharacter *character) {
 		if g.state == playingPink {
 			g.state = pinkSpecialMoveDown
 			currentCharacter.state = specialMove
-			currentCharacter.specialMoveCurrentFrame = 0
 		} else {
 			currentCharacter.state = idle
 		}
@@ -146,7 +135,6 @@ func (g *Game) tryLeftMove(currentCharacter *character) {
 		if g.state == playingPink {
 			g.state = pinkSpecialMoveUp
 			currentCharacter.state = specialMove
-			currentCharacter.specialMoveCurrentFrame = 0
 		} else {
 			currentCharacter.state = idle
 		}
@@ -167,7 +155,6 @@ func (g *Game) tryUpMove(currentCharacter *character) {
 	if g.state == playingPink {
 		if g.fieldOkForPinkSpecialMove(currentCharacter.x, currentCharacter.y, -1) {
 			g.state = pinkSpecialMoveDirectUp
-			currentCharacter.specialMoveCurrentFrame = 0
 			currentCharacter.state = specialMove
 			currentCharacter.x = math.Round(currentCharacter.x)
 		}
@@ -187,7 +174,6 @@ func (g *Game) tryDownMove(currentCharacter *character) {
 	if g.state == playingPink {
 		if g.fieldOkForPinkSpecialMove(currentCharacter.x, currentCharacter.y, 1) {
 			g.state = pinkSpecialMoveDirectDown
-			currentCharacter.specialMoveCurrentFrame = 0
 			currentCharacter.state = specialMove
 			currentCharacter.x = math.Round(currentCharacter.x)
 		}

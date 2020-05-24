@@ -42,6 +42,7 @@ func (g *Game) performPinkSpecialMoveDirectDown() {
 	// end of move
 	if g.pinkCharacter.specialMoveCurrentFrame >= g.pinkCharacter.specialMoveNumFrames {
 		g.state = playingPink
+		g.pinkCharacter.specialMoveCurrentFrame = 0
 		g.pinkCharacter.state = idle
 		g.pinkCharacter.y = math.Round(g.pinkCharacter.y)
 	}
@@ -65,6 +66,7 @@ func (g *Game) performPinkSpecialMoveDirectUp() {
 	}
 	if g.pinkCharacter.specialMoveCurrentFrame >= g.pinkCharacter.specialMoveNumFrames {
 		g.state = playingPink
+		g.pinkCharacter.specialMoveCurrentFrame = 0
 		g.pinkCharacter.state = idle
 		g.pinkCharacter.y = math.Round(g.pinkCharacter.y)
 	}
@@ -101,8 +103,8 @@ func (g *Game) performPinkSpecialMoveDown() {
 			g.state = playingPink
 		} else {
 			g.tutoStep = 0
-			g.pinkCharacter.specialMoveCurrentFrame = 0
 		}
+		g.pinkCharacter.specialMoveCurrentFrame = 0
 		g.pinkCharacter.state = idle
 		g.pinkCharacter.y = math.Round(g.pinkCharacter.y)
 	}
@@ -133,9 +135,9 @@ func (g *Game) performPinkSpecialMoveUp() {
 		if g.state != tuto1 {
 			g.state = playingPink
 		} else {
-			g.pinkCharacter.specialMoveCurrentFrame = 0
 			g.tutoStep = 1
 		}
+		g.pinkCharacter.specialMoveCurrentFrame = 0
 		g.pinkCharacter.state = idle
 		g.pinkCharacter.y = math.Round(g.pinkCharacter.y)
 	}
