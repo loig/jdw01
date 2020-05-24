@@ -28,6 +28,7 @@ type Game struct {
 	state          gameState
 	gamepadID      int
 	camera         cameraInfo
+	audioManager   audioManagerInfo
 	screenWidth    int
 	screenHeight   int
 	blueCharacter  character
@@ -132,6 +133,9 @@ func (g *Game) Init() (err error) {
 
 	// Set camera
 	g.setCameraPosition()
+
+	// Set sound management
+	g.initSound()
 
 	return nil
 

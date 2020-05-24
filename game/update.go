@@ -263,6 +263,9 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	// update camera
 	g.setCameraPosition()
 
+	// update sound
+	g.updateSound()
+
 	// update minimap
 	g.updateMinimap()
 
