@@ -35,6 +35,7 @@ const (
 	maxSpaceBetweenBlueWalls = 30
 	chanceToDig              = 8
 	chanceToGrow             = 25
+	chanceOfBreakWall        = 3
 )
 
 // GenerateField generates a field and returns it
@@ -80,6 +81,7 @@ func GenerateField(width, height int) (field [][]FieldTile, blueX, blueY, pinkX,
 	generateSkyworld(field, tmpFloorLevel, width, height)
 	improveFlyworld(field, tmpFloorLevel, width, height)
 	generateBlueWalls(field, tmpFloorLevel, width, height, blueStart, pinkStart, whiteStart, goal)
+	generateBreakableWalls(field, tmpFloorLevel, width, height, blueStart, pinkStart, whiteStart, goal)
 
 	// If things are added outside of the playing field, it must be
 	// done after this point (i.e. things added to the left/right of the field)

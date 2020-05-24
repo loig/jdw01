@@ -34,6 +34,7 @@ var (
 	nothingTile                   = FieldTile{nothingType, nothingType, nothingType, nothingType}
 	destroyableWallTile           = FieldTile{destroyableWallType, nothingType, nothingType, nothingType}
 	underworldDestroyableWallTile = FieldTile{destroyableWallType, nothingType, backgroundWallType, nothingType}
+	onladerDestroyableWallTile    = FieldTile{destroyableWallType, nothingType, laderType, nothingType}
 	traversableWallTile           = FieldTile{traversableWallType, nothingType, nothingType, nothingType}
 	backgroundWallTile            = FieldTile{backgroundWallType, nothingType, nothingType, nothingType}
 	floorLevelBackgroundWallTile  = FieldTile{backgroundWallType, grassType, nothingType, nothingType}
