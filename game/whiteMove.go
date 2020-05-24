@@ -23,11 +23,17 @@ func (g *Game) tryWhiteSpecialMoveUp() {
 	switch g.getLaderFieldMove(g.whiteCharacter.x, g.whiteCharacter.y, -g.whiteCharacter.speed/2) {
 	case normalFieldMove:
 		g.whiteCharacter.y -= g.whiteCharacter.speed * 0.8
-		g.state = whiteSpecialMove
+		if g.state != tuto2 {
+			g.state = whiteSpecialMove
+		}
 	case endOfLaderFieldMove:
 		g.whiteCharacter.y -= g.whiteCharacter.speed * 0.8
 		g.whiteCharacter.y = math.Round(g.whiteCharacter.y)
-		g.state = playingWhite
+		if g.state != tuto2 {
+			g.state = playingWhite
+		} else {
+			g.whiteCharacter.state = idle
+		}
 	case noFieldMove:
 		g.state = whiteSpecialMoveIdle
 	}
@@ -37,11 +43,17 @@ func (g *Game) tryWhiteSpecialMoveDown() {
 	switch g.getLaderFieldMove(g.whiteCharacter.x, g.whiteCharacter.y, +g.whiteCharacter.speed/2) {
 	case normalFieldMove:
 		g.whiteCharacter.y += g.whiteCharacter.speed * 0.8
-		g.state = whiteSpecialMove
+		if g.state != tuto2 {
+			g.state = whiteSpecialMove
+		}
 	case endOfLaderFieldMove:
 		g.whiteCharacter.y += g.whiteCharacter.speed * 0.8
 		g.whiteCharacter.y = math.Round(g.whiteCharacter.y)
-		g.state = playingWhite
+		if g.state != tuto2 {
+			g.state = playingWhite
+		} else {
+			g.whiteCharacter.state = idle
+		}
 	case noFieldMove:
 		g.state = whiteSpecialMoveIdle
 	}

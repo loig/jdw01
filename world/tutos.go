@@ -42,3 +42,55 @@ var Tuto1Field [][]FieldTile = [][]FieldTile{
 	[]FieldTile{nothingTile, nothingTile, nothingTile, nothingTile, traversableWallTile, nothingTile, nothingTile, nothingTile, nothingTile, traversableWallTile, destroyableWallTile, nothingTile, nothingTile, nothingTile, nothingTile, traversableWallTile, nothingTile, nothingTile, nothingTile, nothingTile},
 	[]FieldTile{floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile, floorLevelfloorTile},
 }
+
+// Positions of the players in the second tuto
+var (
+	BlueXTuto2  float64 = 9
+	WhiteXTuto2 float64 = 3
+	PinkXTuto2  float64 = 15
+	BlueYTuto2  float64 = 9
+	WhiteYTuto2 float64 = 9
+	PinkYTuto2  float64 = 10
+)
+
+// Tuto2Field is the field for the first tuto
+var Tuto2Field [][]FieldTile = [][]FieldTile{
+	[]FieldTile{nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, leftIslandTile, islandLaderTile, islandTile, rightIslandTile, nothingTile, nothingTile, leftIslandTile, islandLaderTile, islandTile, rightIslandTile, nothingTile, nothingTile, leftIslandTile, islandLaderTile, islandTile, rightIslandTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, floorLevelfloorTile, floorLevelBackgroundWallTile, floorLevelBackgroundWallTile, floorLevelfloorTile, nothingTile, nothingTile, floorLevelfloorTile, floorLevelBackgroundWallTile, floorLevelBackgroundWallTile, floorLevelfloorTile, nothingTile, nothingTile, floorLevelfloorTile, floorLevelBackgroundWallTile, floorLevelBackgroundWallTile, floorLevelfloorTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, floorTile, floorTile, backgroundWallTile, floorTile, nothingTile, nothingTile, floorTile, floorTile, backgroundWallTile, floorTile, nothingTile, nothingTile, floorTile, floorTile, backgroundWallTile, floorTile, nothingTile, nothingTile},
+}
+
+// Positions of the players in the third tuto
+var (
+	BlueXTuto3  float64 = 9
+	WhiteXTuto3 float64 = 3
+	PinkXTuto3  float64 = 15
+	BlueYTuto3  float64 = 9
+	WhiteYTuto3 float64 = 9
+	PinkYTuto3  float64 = 10
+)
+
+// Tuto3Field is the field for the first tuto
+var Tuto3Field [][]FieldTile = [][]FieldTile{
+	[]FieldTile{nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, leftIslandTile, islandLaderTile, islandTile, rightIslandTile, nothingTile, nothingTile, leftIslandTile, islandLaderTile, islandTile, rightIslandTile, nothingTile, nothingTile, leftIslandTile, islandLaderTile, islandTile, rightIslandTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, laderTile, nothingTile, nothingTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, floorLevelfloorTile, floorLevelBackgroundWallTile, floorLevelBackgroundWallTile, floorLevelfloorTile, nothingTile, nothingTile, floorLevelfloorTile, floorLevelBackgroundWallTile, floorLevelBackgroundWallTile, floorLevelfloorTile, nothingTile, nothingTile, floorLevelfloorTile, floorLevelBackgroundWallTile, floorLevelBackgroundWallTile, floorLevelfloorTile, nothingTile, nothingTile},
+	[]FieldTile{nothingTile, nothingTile, floorTile, floorTile, backgroundWallTile, floorTile, nothingTile, nothingTile, floorTile, floorTile, backgroundWallTile, floorTile, nothingTile, nothingTile, floorTile, floorTile, backgroundWallTile, floorTile, nothingTile, nothingTile},
+}

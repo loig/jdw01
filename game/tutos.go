@@ -65,3 +65,56 @@ func (g *Game) updateTuto1() {
 	}
 	g.tutoFrame++
 }
+
+const (
+	tuto2EndStep1 = 450
+	tuto2EndFrame = 700
+)
+
+func (g *Game) updateTuto2() {
+	if g.tutoFrame < tuto2EndFrame {
+		if g.tutoFrame > idleFrames {
+			if g.tutoFrame < tuto2EndStep1 {
+				if g.whiteCharacter.state == specialMove {
+					g.tryWhiteSpecialMoveUp()
+				} else {
+					g.tryUpMove(&g.whiteCharacter)
+				}
+				if g.pinkCharacter.state == specialMove {
+					g.performPinkSpecialMoveDirectUp()
+				} else {
+					g.tryUpMove(&g.pinkCharacter)
+				}
+				g.tryUpMove(&g.blueCharacter)
+			} else {
+				if g.whiteCharacter.state == specialMove {
+					g.tryWhiteSpecialMoveDown()
+				} else {
+					g.tryDownMove(&g.whiteCharacter)
+				}
+				if g.pinkCharacter.state == specialMove {
+					g.performPinkSpecialMoveDirectDown()
+				} else {
+					g.tryDownMove(&g.pinkCharacter)
+				}
+				g.tryDownMove(&g.blueCharacter)
+			}
+		}
+	} else {
+		g.tutoFrame = 0
+		g.blueCharacter.x = world.BlueXTuto2
+		g.blueCharacter.y = world.BlueYTuto2
+		g.blueCharacter.state = idle
+		g.whiteCharacter.x = world.WhiteXTuto2
+		g.whiteCharacter.y = world.WhiteYTuto2
+		g.whiteCharacter.state = idle
+		g.pinkCharacter.x = world.PinkXTuto2
+		g.pinkCharacter.y = world.PinkYTuto2
+		g.pinkCharacter.state = idle
+	}
+	g.tutoFrame++
+}
+
+func (g *Game) updateTuto3() {
+
+}

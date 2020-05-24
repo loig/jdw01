@@ -27,7 +27,7 @@ func (g *Game) initAnimation() {
 func (g *Game) updateAnimation() {
 	g.blueCharacter.updateCharacterAnimation()
 	g.pinkCharacter.updateCharacterAnimation()
-	if g.whiteCharacter.state != specialMove || g.state == whiteSpecialMove {
+	if g.whiteCharacter.state != specialMove || g.state == whiteSpecialMove || g.state == tuto2 {
 		g.whiteCharacter.updateCharacterAnimation()
 	}
 }

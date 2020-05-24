@@ -53,6 +53,22 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(2)) {
 			g.tutoStep = 0
 			g.tutoFrame = 0
+			g.field = world.Tuto2Field
+			g.blueCharacter.x = world.BlueXTuto2
+			g.blueCharacter.y = world.BlueYTuto2
+			g.blueCharacter.state = idle
+			g.blueCharacter.animationFrame = 0
+			g.blueCharacter.animationStep = 0
+			g.whiteCharacter.x = world.WhiteXTuto2
+			g.whiteCharacter.y = world.WhiteYTuto2
+			g.whiteCharacter.state = idle
+			g.whiteCharacter.animationFrame = 0
+			g.whiteCharacter.animationStep = 0
+			g.pinkCharacter.x = world.PinkXTuto2
+			g.pinkCharacter.y = world.PinkYTuto2
+			g.pinkCharacter.state = idle
+			g.pinkCharacter.animationFrame = 0
+			g.pinkCharacter.animationStep = 0
 			g.state = tuto2
 		} else {
 			g.setCameraPosition()
@@ -62,22 +78,65 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		return nil
 
 	case tuto2:
-		g.state = tuto3
+		if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(2)) {
+			g.tutoStep = 0
+			g.tutoFrame = 0
+			g.field = world.Tuto3Field
+			g.blueCharacter.x = world.BlueXTuto3
+			g.blueCharacter.y = world.BlueYTuto3
+			g.blueCharacter.state = idle
+			g.blueCharacter.animationFrame = 0
+			g.blueCharacter.animationStep = 0
+			g.whiteCharacter.x = world.WhiteXTuto3
+			g.whiteCharacter.y = world.WhiteYTuto3
+			g.whiteCharacter.state = idle
+			g.whiteCharacter.animationFrame = 0
+			g.whiteCharacter.animationStep = 0
+			g.pinkCharacter.x = world.PinkXTuto3
+			g.pinkCharacter.y = world.PinkYTuto3
+			g.pinkCharacter.state = idle
+			g.pinkCharacter.animationFrame = 0
+			g.pinkCharacter.animationStep = 0
+			g.state = tuto3
+		} else {
+			g.setCameraPosition()
+			g.updateAnimation()
+			g.updateTuto2()
+		}
+		return nil
 
 	case tuto3:
-		g.state = tuto4
+		if inpututil.IsGamepadButtonJustPressed(g.gamepadID, ebiten.GamepadButton(2)) {
+			g.tutoStep = 0
+			g.tutoFrame = 0
+			g.state = tuto4
+		} else {
+			g.setCameraPosition()
+			g.updateAnimation()
+			g.updateTuto3()
+		}
+		return nil
 
 	case tuto4:
 		g.field = g.world
 		g.blueCharacter.x = g.blueStartX
 		g.blueCharacter.y = g.blueStartY
 		g.blueCharacter.speed = 0.11
+		g.blueCharacter.state = idle
+		g.blueCharacter.animationFrame = 0
+		g.blueCharacter.animationStep = 0
 		g.whiteCharacter.x = g.whiteStartX
 		g.whiteCharacter.y = g.whiteStartY
 		g.whiteCharacter.speed = 0.09
+		g.whiteCharacter.state = idle
+		g.whiteCharacter.animationFrame = 0
+		g.whiteCharacter.animationStep = 0
 		g.pinkCharacter.x = g.pinkStartX
 		g.pinkCharacter.y = g.pinkStartY
 		g.pinkCharacter.speed = 0.13
+		g.pinkCharacter.state = idle
+		g.pinkCharacter.animationFrame = 0
+		g.pinkCharacter.animationStep = 0
 		g.state = playingBlue
 
 	case playingBlue, playingPink, playingWhite:

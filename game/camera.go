@@ -40,7 +40,7 @@ func (g *Game) setCameraPosition() {
 	case playingWhite, whiteSpecialMove, whiteSpecialMoveIdle:
 		g.camera.x = g.whiteCharacter.x * 32
 		g.camera.y = g.whiteCharacter.y * 32
-	case tuto1:
+	case tuto1, tuto2:
 		g.camera.x = (float64(len(g.field[0])) / 2) * 32
 		g.camera.y = (float64(len(g.field)) / 2) * 32
 	}

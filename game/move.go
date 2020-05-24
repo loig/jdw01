@@ -144,17 +144,21 @@ func (g *Game) tryLeftMove(currentCharacter *character) {
 }
 
 func (g *Game) tryUpMove(currentCharacter *character) {
-	if g.state == playingWhite {
+	if g.state == playingWhite || (g.state == tuto2 && currentCharacter.id == whiteMonster) {
 		if g.fieldOkForWhiteSpecialMove(currentCharacter.x, currentCharacter.y, -1) {
-			g.state = whiteSpecialMove
+			if g.state != tuto2 {
+				g.state = whiteSpecialMove
+			}
 			currentCharacter.state = specialMove
 			currentCharacter.x = math.Round(currentCharacter.x)
 		}
 		return
 	}
-	if g.state == playingPink {
+	if g.state == playingPink || (g.state == tuto2 && currentCharacter.id == pinkMonster) {
 		if g.fieldOkForPinkSpecialMove(currentCharacter.x, currentCharacter.y, -1) {
-			g.state = pinkSpecialMoveDirectUp
+			if g.state != tuto2 {
+				g.state = pinkSpecialMoveDirectUp
+			}
 			currentCharacter.state = specialMove
 			currentCharacter.x = math.Round(currentCharacter.x)
 		}
@@ -162,18 +166,22 @@ func (g *Game) tryUpMove(currentCharacter *character) {
 }
 
 func (g *Game) tryDownMove(currentCharacter *character) {
-	if g.state == playingWhite {
+	if g.state == playingWhite || (g.state == tuto2 && currentCharacter.id == whiteMonster) {
 		if g.fieldOkForWhiteSpecialMove(currentCharacter.x, currentCharacter.y, 1) {
-			g.state = whiteSpecialMove
+			if g.state != tuto2 {
+				g.state = whiteSpecialMove
+			}
 			currentCharacter.state = specialMove
 			currentCharacter.x = math.Round(currentCharacter.x)
 			currentCharacter.y += 0.5
 		}
 		return
 	}
-	if g.state == playingPink {
+	if g.state == playingPink || (g.state == tuto2 && currentCharacter.id == pinkMonster) {
 		if g.fieldOkForPinkSpecialMove(currentCharacter.x, currentCharacter.y, 1) {
-			g.state = pinkSpecialMoveDirectDown
+			if g.state != tuto2 {
+				g.state = pinkSpecialMoveDirectDown
+			}
 			currentCharacter.state = specialMove
 			currentCharacter.x = math.Round(currentCharacter.x)
 		}
