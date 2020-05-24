@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package game
 
 type character struct {
+	id                      characterID
 	x                       float64
 	y                       float64
 	speed                   float64
@@ -43,6 +44,14 @@ const (
 	move
 	specialMove
 	strike
+)
+
+type characterID int
+
+const (
+	blueMonster characterID = iota
+	whiteMonster
+	pinkMonster
 )
 
 type side int

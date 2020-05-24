@@ -28,6 +28,10 @@ func (g *Game) tryRightMove(currentCharacter *character) {
 		currentCharacter.x += currentCharacter.speed
 		currentCharacter.state = move
 	case blueFieldMove:
+		if g.state == tuto1 && currentCharacter.id == blueMonster {
+			currentCharacter.state = specialMove
+			return
+		}
 		if g.state == playingBlue {
 			g.state = blueSpecialMove
 			currentCharacter.state = specialMove
@@ -36,6 +40,12 @@ func (g *Game) tryRightMove(currentCharacter *character) {
 			currentCharacter.state = idle
 		}
 	case blueOrPinkUpFieldMove:
+		if g.state == tuto1 {
+			if currentCharacter.id == blueMonster || currentCharacter.id == pinkMonster {
+				currentCharacter.state = specialMove
+				return
+			}
+		}
 		if g.state == playingBlue {
 			g.state = blueSpecialMove
 			currentCharacter.state = specialMove
@@ -57,16 +67,32 @@ func (g *Game) tryRightMove(currentCharacter *character) {
 			currentCharacter.state = move
 		}
 	case pinkDownFieldMove:
+		if g.state == tuto1 {
+			if currentCharacter.id == pinkMonster {
+				currentCharacter.state = specialMove
+				return
+			}
+		}
 		if g.state == playingPink {
 			g.state = pinkSpecialMoveDown
 			currentCharacter.state = specialMove
 			currentCharacter.specialMoveCurrentFrame = 0
+		} else {
+			currentCharacter.state = idle
 		}
 	case pinkUpFieldMove:
+		if g.state == tuto1 {
+			if currentCharacter.id == pinkMonster {
+				currentCharacter.state = specialMove
+				return
+			}
+		}
 		if g.state == playingPink {
 			g.state = pinkSpecialMoveUp
 			currentCharacter.state = specialMove
 			currentCharacter.specialMoveCurrentFrame = 0
+		} else {
+			currentCharacter.state = idle
 		}
 	case noFieldMove:
 		currentCharacter.state = idle
@@ -113,12 +139,16 @@ func (g *Game) tryLeftMove(currentCharacter *character) {
 			g.state = pinkSpecialMoveDown
 			currentCharacter.state = specialMove
 			currentCharacter.specialMoveCurrentFrame = 0
+		} else {
+			currentCharacter.state = idle
 		}
 	case pinkUpFieldMove:
 		if g.state == playingPink {
 			g.state = pinkSpecialMoveUp
 			currentCharacter.state = specialMove
 			currentCharacter.specialMoveCurrentFrame = 0
+		} else {
+			currentCharacter.state = idle
 		}
 	case noFieldMove:
 		currentCharacter.state = idle

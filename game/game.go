@@ -34,6 +34,17 @@ type Game struct {
 	whiteCharacter character
 	pinkCharacter  character
 	field          [][]world.FieldTile
+	world          [][]world.FieldTile
+	blueStartX     float64
+	blueStartY     float64
+	pinkStartX     float64
+	pinkStartY     float64
+	whiteStartX    float64
+	whiteStartY    float64
+	goalX          float64
+	goalY          float64
+	tutoStep       int
+	tutoFrame      int
 }
 
 // Current state of the game
@@ -41,6 +52,10 @@ type gameState int
 
 const (
 	initGame gameState = iota
+	tuto1
+	tuto2
+	tuto3
+	tuto4
 	playingBlue
 	blueSpecialMove
 	blueStrike
@@ -54,6 +69,7 @@ const (
 	pinkSpecialMoveDown
 	pinkSpecialMoveUp
 	pinkStrike
+	theEnd
 )
 
 // Errors for communications with main program
@@ -80,11 +96,8 @@ func (g *Game) Init() (err error) {
 	fieldWidth := 200
 	fieldHeight := 100
 
-	// Set field
-	var (
-		blueX, blueY, pinkX, pinkY, whiteX, whiteY float64
-	)
-	g.field, blueX, blueY, pinkX, pinkY, whiteX, whiteY = world.GenerateField(fieldWidth, fieldHeight)
+	// Set world
+	g.world, g.blueStartX, g.blueStartY, g.pinkStartX, g.pinkStartY, g.whiteStartX, g.whiteStartY, g.goalX, g.goalY = world.GenerateField(fieldWidth, fieldHeight)
 
 	// Initialize minimap
 	if err = g.initMiniMap(); err != nil {
@@ -92,27 +105,33 @@ func (g *Game) Init() (err error) {
 	}
 
 	// Initial positions of characters
-	g.blueCharacter.x = blueX
-	g.blueCharacter.y = blueY
+	g.blueCharacter.id = blueMonster
+	g.blueCharacter.x = world.BlueXTuto1
+	g.blueCharacter.y = world.BlueYTuto1
 	g.blueCharacter.state = idle
-	g.blueCharacter.speed = 0.11
+	//g.blueCharacter.speed = 0.11
+	g.blueCharacter.speed = 0.05
 
-	g.whiteCharacter.x = whiteX
-	g.whiteCharacter.y = whiteY
+	g.whiteCharacter.id = whiteMonster
+	g.whiteCharacter.x = world.WhiteXTuto1
+	g.whiteCharacter.y = world.WhiteYTuto1
 	g.whiteCharacter.state = idle
-	g.whiteCharacter.speed = 0.09
-	g.whiteCharacter.facing = left
+	//g.whiteCharacter.speed = 0.09
+	//g.whiteCharacter.facing = left
+	g.whiteCharacter.speed = 0.05
 
-	g.pinkCharacter.x = pinkX
-	g.pinkCharacter.y = pinkY
+	g.pinkCharacter.id = pinkMonster
+	g.pinkCharacter.x = world.PinkXTuto1
+	g.pinkCharacter.y = world.PinkYTuto1
 	g.pinkCharacter.state = idle
-	g.pinkCharacter.speed = 0.13
-
-	// Set camera
-	g.setCameraPosition()
+	//g.pinkCharacter.speed = 0.13
+	g.pinkCharacter.speed = 0.05
 
 	// Set initial game state
 	g.state = initGame
+
+	// Set camera
+	g.setCameraPosition()
 
 	return nil
 

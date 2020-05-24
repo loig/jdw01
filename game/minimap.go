@@ -30,29 +30,29 @@ var miniMapOverlay *ebiten.Image
 
 func (g *Game) initMiniMap() (err error) {
 
-	miniMap, err = ebiten.NewImage(len(g.field[0])*16+32, len(g.field)*16+32, ebiten.FilterDefault)
+	miniMap, err = ebiten.NewImage(len(g.world[0])*16+32, len(g.world)*16+32, ebiten.FilterDefault)
 	if err != nil {
 		return err
 	}
-	miniMapOverlay, err = ebiten.NewImage(len(g.field[0])*16+32, len(g.field)*16+32, ebiten.FilterDefault)
+	miniMapOverlay, err = ebiten.NewImage(len(g.world[0])*16+32, len(g.world)*16+32, ebiten.FilterDefault)
 	if err != nil {
 		return err
 	}
 
 	miniMap.Fill(color.Black)
 	// Draw the field
-	for y := 0; y < len(g.field); y++ {
-		for x := 0; x < len(g.field[0]); x++ {
+	for y := 0; y < len(g.world); y++ {
+		for x := 0; x < len(g.world[0]); x++ {
 			op := &ebiten.DrawImageOptions{}
 			op.GeoM.Translate(float64(x)*16+16, float64(y)*16+16)
 			sub = image.Rect(
-				16*g.field[y][x].Tile.LookX, 16*g.field[y][x].Tile.LookY,
-				16+16*g.field[y][x].Tile.LookX, 16+16*g.field[y][x].Tile.LookY,
+				16*g.world[y][x].Tile.LookX, 16*g.world[y][x].Tile.LookY,
+				16+16*g.world[y][x].Tile.LookX, 16+16*g.world[y][x].Tile.LookY,
 			)
 			miniMap.DrawImage(tilesImage.SubImage(sub).(*ebiten.Image), op)
 			sub = image.Rect(
-				16*g.field[y][x].Decoration.LookX, 16*g.field[y][x].Decoration.LookY,
-				16+16*g.field[y][x].Decoration.LookX, 16+16*g.field[y][x].Decoration.LookY,
+				16*g.world[y][x].Decoration.LookX, 16*g.world[y][x].Decoration.LookY,
+				16+16*g.world[y][x].Decoration.LookX, 16+16*g.world[y][x].Decoration.LookY,
 			)
 			miniMap.DrawImage(tilesImage.SubImage(sub).(*ebiten.Image), op)
 		}

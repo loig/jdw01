@@ -28,7 +28,9 @@ func (g *Game) performBlueSpecialMove() {
 	}
 	if g.blueCharacter.specialMoveCurrentFrame > g.blueCharacter.specialMoveNumFrames {
 		if g.blueCharacter.animationStep == 0 {
-			g.state = playingBlue
+			if g.state != tuto1 {
+				g.state = playingBlue
+			}
 			g.blueCharacter.state = idle
 		}
 	}

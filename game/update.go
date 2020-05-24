@@ -20,11 +20,19 @@ package game
 import (
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/inpututil"
+	"github.com/loig/jdw01/world"
 )
 
 // Update implements one of the required methods
 // for the ebiten.Game interface
 func (g *Game) Update(screen *ebiten.Image) error {
+
+	// check for game completion
+	if g.blueCharacter.x >= g.goalX &&
+		g.pinkCharacter.x >= g.goalX &&
+		g.whiteCharacter.x >= g.goalX {
+		g.state = theEnd
+	}
 
 	switch g.state {
 
@@ -35,8 +43,26 @@ func (g *Game) Update(screen *ebiten.Image) error {
 			return errNoGamePad
 		}
 		g.gamepadID = gpIDs[0]
-		g.state = playingBlue
+		g.field = world.Tuto1Field
+		g.state = tuto1
+		g.tutoStep = 0
+		g.tutoFrame = 0
 		return nil
+
+	case tuto1:
+		g.setCameraPosition()
+		g.updateAnimation()
+		g.updateTuto1()
+		return nil
+
+	case tuto2:
+		g.state = tuto3
+
+	case tuto3:
+		g.state = tuto4
+
+	case tuto4:
+		g.state = playingBlue
 
 	case playingBlue, playingPink, playingWhite:
 		// get current player

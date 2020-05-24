@@ -39,7 +39,7 @@ const (
 )
 
 // GenerateField generates a field and returns it
-func GenerateField(width, height int) (field [][]FieldTile, blueX, blueY, pinkX, pinkY, whiteX, whiteY float64) {
+func GenerateField(width, height int) (field [][]FieldTile, blueX, blueY, pinkX, pinkY, whiteX, whiteY, goalX, goalY float64) {
 	// seeding the random generator
 	rand.Seed(time.Now().UTC().UnixNano())
 
@@ -86,5 +86,5 @@ func GenerateField(width, height int) (field [][]FieldTile, blueX, blueY, pinkX,
 	// If things are added outside of the playing field, it must be
 	// done after this point (i.e. things added to the left/right of the field)
 
-	return field, float64(blueStart.x), float64(blueStart.y), float64(pinkStart.x), float64(pinkStart.y), float64(whiteStart.x), float64(whiteStart.y)
+	return field, float64(blueStart.x), float64(blueStart.y), float64(pinkStart.x), float64(pinkStart.y), float64(whiteStart.x), float64(whiteStart.y), float64(goal.x), float64(goal.y)
 }

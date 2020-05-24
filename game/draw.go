@@ -130,17 +130,19 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			}
 		}
 
-		// Draw the minimap
-		op = &ebiten.DrawImageOptions{}
-		op.GeoM.Scale(0.125, 0.125)
-		op.GeoM.Translate(5, float64(g.screenHeight)-5-(float64(len(g.field))*16+32)*0.125)
-		screen.DrawImage(miniMap, op)
-		screen.DrawImage(miniMapOverlay, op)
+		if g.state != tuto1 && g.state != tuto2 && g.state != tuto3 && g.state != tuto4 {
+			// Draw the minimap
+			op = &ebiten.DrawImageOptions{}
+			op.GeoM.Scale(0.125, 0.125)
+			op.GeoM.Translate(5, float64(g.screenHeight)-5-(float64(len(g.field))*16+32)*0.125)
+			screen.DrawImage(miniMap, op)
+			screen.DrawImage(miniMapOverlay, op)
+		}
 
 		// DEBUG
 		ebitenutil.DrawLine(screen, float64(g.screenWidth)/2, 0, float64(g.screenWidth)/2, float64(g.screenHeight), color.White)
 		ebitenutil.DrawLine(screen, 0, float64(g.screenHeight)/2, float64(g.screenWidth), float64(g.screenHeight)/2, color.White)
-		s := fmt.Sprint("FPS: ", ebiten.CurrentFPS(), "\n", "TPS: ", ebiten.CurrentTPS(), "\n", "Camera: ", xmin, ", ", ymin, ", ", xmax, ",", ymax)
+		s := fmt.Sprint("FPS: ", ebiten.CurrentFPS(), "\n", "TPS: ", ebiten.CurrentTPS(), "\n", "Camera: ", xmin, ", ", ymin, ", ", xmax, ",", ymax, "\n", "Blue: ", g.blueCharacter.x, ", ", g.blueCharacter.y)
 		ebitenutil.DebugPrint(screen, s)
 	}
 }

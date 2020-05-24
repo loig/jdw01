@@ -184,6 +184,19 @@ func (g *Game) strikeEffectOnField(xinit, yinit float64, direction int) {
 	inty := int(math.Round(yinit))
 	if inty >= 0 && inty < len(g.field) && intx >= 0 && intx < len(g.field[inty]) {
 		if world.IsBreakableField(g.field[inty][intx]) {
+			if int(math.Round(g.pinkCharacter.y)) == inty-1 &&
+				int(math.Round(g.pinkCharacter.x)) == intx {
+				return
+			}
+			if g.whiteCharacter.state != specialMove &&
+				int(math.Round(g.whiteCharacter.y)) == inty-1 &&
+				int(math.Round(g.whiteCharacter.x)) == intx {
+				return
+			}
+			if int(math.Round(g.blueCharacter.y)) == inty-1 &&
+				int(math.Round(g.blueCharacter.x)) == intx {
+				return
+			}
 			g.field[inty][intx].Tile = g.field[inty][intx].Destructed
 		}
 	}
