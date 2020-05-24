@@ -32,14 +32,15 @@ type gamepadbuttons struct {
 	rb    int
 }
 
-func getGamepadPlugged() int {
+func (g *Game) getGamepadPlugged() bool {
 
 	gpIDs := ebiten.GamepadIDs()
 	if len(gpIDs) <= 0 {
-		return -1
+		return false
 	}
-	return gpIDs[0]
-
+	g.gamepadID = gpIDs[0]
+	g.buttons = gamepadbuttons{-1, -1, -1, -1, -1, -1, -1}
+	return true
 }
 
 func (g *Game) getButtonPressed() int {
@@ -50,4 +51,18 @@ func (g *Game) getButtonPressed() int {
 		}
 	}
 	return -1
+}
+
+func (g *Game) setButton(button *int, wanted int) bool {
+	if g.buttons.left == wanted ||
+		g.buttons.right == wanted ||
+		g.buttons.down == wanted ||
+		g.buttons.up == wanted ||
+		g.buttons.x == wanted ||
+		g.buttons.lb == wanted ||
+		g.buttons.rb == wanted {
+		return false
+	}
+	*button = wanted
+	return true
 }

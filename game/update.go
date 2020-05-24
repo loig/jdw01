@@ -37,61 +37,54 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	switch g.state {
 
 	case initGame:
+		okForNext := false
 		// Check for gamepad
-		gpID := getGamepadPlugged()
 		switch g.tutoStep {
 		case 0:
-			if gpID != -1 {
-				g.gamepadID = gpID
-				g.tutoStep++
-			}
+			okForNext = g.getGamepadPlugged()
 		case 1:
 			buttonPressed := g.getButtonPressed()
 			if buttonPressed >= 0 {
-				g.buttons.left = buttonPressed
-				g.tutoStep++
+				okForNext = g.setButton(&g.buttons.left, buttonPressed)
 			}
 		case 2:
 			buttonPressed := g.getButtonPressed()
 			if buttonPressed >= 0 {
-				g.buttons.right = buttonPressed
-				g.tutoStep++
+				okForNext = g.setButton(&g.buttons.right, buttonPressed)
 			}
 		case 3:
 			buttonPressed := g.getButtonPressed()
 			if buttonPressed >= 0 {
-				g.buttons.up = buttonPressed
-				g.tutoStep++
+				okForNext = g.setButton(&g.buttons.up, buttonPressed)
 			}
 		case 4:
 			buttonPressed := g.getButtonPressed()
 			if buttonPressed >= 0 {
-				g.buttons.down = buttonPressed
-				g.tutoStep++
+				okForNext = g.setButton(&g.buttons.down, buttonPressed)
 			}
 		case 5:
 			buttonPressed := g.getButtonPressed()
 			if buttonPressed >= 0 {
-				g.buttons.x = buttonPressed
-				g.tutoStep++
+				okForNext = g.setButton(&g.buttons.x, buttonPressed)
 			}
 		case 6:
 			buttonPressed := g.getButtonPressed()
 			if buttonPressed >= 0 {
-				g.buttons.lb = buttonPressed
-				g.tutoStep++
+				okForNext = g.setButton(&g.buttons.lb, buttonPressed)
 			}
 		case 7:
 			buttonPressed := g.getButtonPressed()
 			if buttonPressed >= 0 {
-				g.buttons.rb = buttonPressed
-				g.tutoStep++
+				okForNext = g.setButton(&g.buttons.rb, buttonPressed)
 			}
 		default:
 			g.field = world.Tuto1Field
 			g.state = tuto1
 			g.tutoStep = 0
 			g.tutoFrame = 0
+		}
+		if okForNext {
+			g.tutoStep++
 		}
 		return nil
 
