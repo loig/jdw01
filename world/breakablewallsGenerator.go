@@ -28,7 +28,7 @@ func generateBreakableWalls(field [][]FieldTile, tmpFloorLevel, width, height in
 		if x == blueStart.x || x == pinkStart.x || x == whiteStart.x {
 			continue
 		}
-		if stopsPink(field, x, tmpFloorLevel-1) {
+		if stopsPink(field, x, tmpFloorLevel-1, blueStart.x, pinkStart.x, whiteStart.x) {
 			doPutWall := rand.Intn(chanceOfBreakWall) != 0
 			for x >= 0 && IsBackgroundField(field[tmpFloorLevel][x]) {
 				if doPutWall {
@@ -50,13 +50,14 @@ func generateBreakableWalls(field [][]FieldTile, tmpFloorLevel, width, height in
 }
 
 // checks that it blocks pink, without blocking blue
-func stopsPink(field [][]FieldTile, x, y int) bool {
+func stopsPink(field [][]FieldTile, x, y, blueX, pinkX, whiteX int) bool {
 	ok := IsBackgroundField(field[y+1][x])
 	xtmp := x
 	for ok && xtmp >= 0 && IsBackgroundField(field[y+1][xtmp]) {
 		xtmp--
 		if xtmp >= 0 {
-			ok = !IsTraversableField(field[y][xtmp])
+			ok = !IsTraversableField(field[y][xtmp]) &&
+				xtmp != blueX && xtmp != pinkX && xtmp != whiteX
 		}
 	}
 	return ok

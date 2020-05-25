@@ -28,6 +28,7 @@ import (
 type audioManagerInfo struct {
 	audioContext *audio.Context
 	soundPlayer  *audio.Player
+	musicPlayer  *audio.Player
 	currentSound soundType
 }
 
@@ -163,10 +164,32 @@ func (g *Game) initSound() (err error) {
 		return err
 	}
 
+	soundFile, err = ebitenutil.OpenFile("assets/music.mp3")
+	if err != nil {
+		return err
+	}
+	sound, err = mp3.Decode(g.audioManager.audioContext, soundFile)
+	if err != nil {
+		return err
+	}
+	infiniteMusic := audio.NewInfiniteLoop(sound, 96*4*44100)
+	musicPlayer, err := audio.NewPlayer(g.audioManager.audioContext, infiniteMusic)
+	if err != nil {
+		panic(err)
+	}
+	g.audioManager.musicPlayer = musicPlayer
+	g.audioManager.musicPlayer.SetVolume(0.3)
+	g.audioManager.musicPlayer.Play()
+
 	return err
 }
 
 func (g *Game) updateSound() {
+
+	if g.audioManager.musicPlayer != nil && !g.audioManager.musicPlayer.IsPlaying() {
+		g.audioManager.musicPlayer.Rewind()
+		g.audioManager.musicPlayer.Play()
+	}
 
 	soundToPlay := noSound
 	if g.blueCharacter.state == move ||
@@ -189,6 +212,7 @@ func (g *Game) updateSound() {
 	}
 
 	if soundToPlay != g.audioManager.currentSound {
+
 		switch soundToPlay {
 		case noSound:
 			g.audioManager.soundPlayer = nil
