@@ -58,6 +58,16 @@ var (
 	tree24Type          = FieldType{backgroundWall, 7, 7}
 	tree34Type          = FieldType{backgroundWall, 8, 7}
 	tree44Type          = FieldType{backgroundWall, 9, 7}
+	flower1type         = FieldType{nothing, 8, 1}
+	flower2type         = FieldType{nothing, 9, 1}
+	smallTree11type     = FieldType{nothing, 0, 8}
+	smallTree12type     = FieldType{nothing, 1, 8}
+	smallTree13type     = FieldType{nothing, 0, 7}
+	smallTree14type     = FieldType{nothing, 1, 7}
+	smallTree21type     = FieldType{nothing, 10, 6}
+	smallTree22type     = FieldType{nothing, 11, 6}
+	smallTree23type     = FieldType{nothing, 10, 5}
+	smallTree24type     = FieldType{nothing, 11, 5}
 )
 
 var (

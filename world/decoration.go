@@ -17,6 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package world
 
+import "math/rand"
+
 var (
 	hole        []FieldTile = []FieldTile{nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile, nothingTile}
 	houseBottom []FieldTile = []FieldTile{tree11Tile, tree21Tile, tree31Tile, house1Tile, house2Tile, house3Tile, house7Tile, tree31Tile, tree41Tile, nothingTile}
@@ -53,4 +55,66 @@ func addHouse(field [][]FieldTile, floorLevel int) [][]FieldTile {
 		}
 	}
 	return field
+}
+
+func addFlowers(field [][]FieldTile, tmpFloorLevel, width, height int) {
+	for y := 0; y < tmpFloorLevel; y++ {
+		for x := 0; x < width; x++ {
+			if field[y+1][x] == floorLevelfloorTile ||
+				field[y+1][x] == islandTile ||
+				field[y+1][x] == leftIslandTile ||
+				field[y+1][x] == rightIslandTile {
+				if rand.Intn(chanceOfFlower) == 0 {
+					if rand.Intn(2) == 0 {
+						field[y][x].Info = flower1type
+					} else {
+						field[y][x].Info = flower2type
+					}
+				}
+			}
+		}
+	}
+}
+
+func addTrees(field [][]FieldTile, tmpFloorLevel, width, height int) {
+	for y := 2; y < tmpFloorLevel; y++ {
+		for x := 1; x < width-2; x++ {
+			if field[y][x] != nothingTile ||
+				field[y-1][x] != nothingTile ||
+				field[y-2][x] != nothingTile ||
+				field[y][x+1] != nothingTile ||
+				field[y-1][x+1] != nothingTile ||
+				field[y-2][x+1] != nothingTile ||
+				field[y][x-1] != nothingTile ||
+				field[y-1][x-1] != nothingTile ||
+				field[y-2][x-1] != nothingTile ||
+				field[y][x+2] != nothingTile ||
+				field[y-1][x+2] != nothingTile ||
+				field[y-2][x+2] != nothingTile {
+				continue
+			}
+			if (field[y+1][x] == floorLevelfloorTile ||
+				field[y+1][x] == islandTile ||
+				field[y+1][x] == leftIslandTile ||
+				field[y+1][x] == rightIslandTile) &&
+				(field[y+1][x+1] == floorLevelfloorTile ||
+					field[y+1][x+1] == islandTile ||
+					field[y+1][x+1] == leftIslandTile ||
+					field[y+1][x+1] == rightIslandTile) {
+				if rand.Intn(chanceOfTree) == 0 {
+					if rand.Intn(3) != 0 {
+						field[y][x].Decoration = smallTree11type
+						field[y][x+1].Decoration = smallTree12type
+						field[y-1][x].Decoration = smallTree13type
+						field[y-1][x+1].Decoration = smallTree14type
+					} else {
+						field[y][x].Decoration = smallTree21type
+						field[y][x+1].Decoration = smallTree22type
+						field[y-1][x].Decoration = smallTree23type
+						field[y-1][x+1].Decoration = smallTree24type
+					}
+				}
+			}
+		}
+	}
 }
